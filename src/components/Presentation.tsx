@@ -1,33 +1,62 @@
 import { useEffect, useRef, useState } from 'react'
 import Reveal from 'reveal.js'
-import { RevealContext, type DeckApi } from '../RevealContext'
 import Notes from 'reveal.js/plugin/notes'
-import presentationMd from '../presentation.md?raw'
-import { parsePresentation } from '../lib/parsePresentation'
-import { getSlideImages } from '../lib/slideImages'
-import SlideImages from './SlideImages'
-import ThemeSwitcher from './ThemeSwitcher'
+import { RevealContext, type DeckApi } from '../RevealContext'
+import { deckTitle, slides } from '../lib/presentationData'
+import { getSlidePanels, type PanelId } from '../lib/slidePanels'
+import { useRevealRouterSync } from '../hooks/useRevealRouterSync'
+import { useSlideRoute } from '../hooks/useSlideRoute'
+import SlidePanelContent from './SlidePanelContent'
+import SlidePanelNav from './SlidePanelNav'
 import 'reveal.js/reveal.css'
 import '../presentation.css'
 
-const { deckTitle, slides } = parsePresentation(presentationMd)
+function SlideStack({
+  slide,
+  activePanel,
+}: {
+  slide: (typeof slides)[number]
+  activePanel: PanelId
+}) {
+  const panels = getSlidePanels(slide)
 
-function formatBody(text: string) {
-  return text.split(/\n\n+/).map((paragraph, i) => (
-    <p key={i}>{paragraph}</p>
-  ))
+  return (
+    <section>
+      {panels.map((panel) => (
+        <section key={panel} data-panel={panel}>
+          <SlidePanelNav slide={slide} activePanel={activePanel} />
+          <SlidePanelContent slide={slide} panel={panel} />
+          {slide.comment && panel === 'main' && (
+            <aside className="notes">
+              {slide.comment}
+              {slide.searchQuery && (
+                <>
+                  {'\n\n'}
+                  Поиск: {slide.searchQuery}
+                </>
+              )}
+            </aside>
+          )}
+        </section>
+      ))}
+    </section>
+  )
 }
 
 export default function Presentation() {
   const deckRef = useRef<HTMLDivElement>(null)
   const [reveal, setReveal] = useState<DeckApi | null>(null)
+  const { slideId, panel } = useSlideRoute()
+
+  useRevealRouterSync(reveal)
 
   useEffect(() => {
     if (!deckRef.current) return
 
     const deck = new Reveal(deckRef.current, {
       plugins: [Notes],
-      hash: true,
+      hash: false,
+      history: false,
       slideNumber: 'c/t',
       transition: 'slide',
       backgroundTransition: 'fade',
@@ -47,42 +76,24 @@ export default function Presentation() {
 
   return (
     <RevealContext.Provider value={reveal}>
-      <ThemeSwitcher />
       <div className="reveal" ref={deckRef}>
-      <div className="slides">
-        <section className="title-slide">
-          <h1>{deckTitle}</h1>
-          <p className="deck-subtitle">
-            Космологические модели разных культур и традиций
-          </p>
-        </section>
+        <div className="slides">
+          <section className="title-slide">
+            <h1>{deckTitle}</h1>
+            <p className="deck-subtitle">
+              Космологические модели разных культур и традиций
+            </p>
+          </section>
 
-        {slides.map((slide) => {
-          const images = getSlideImages(slide.id)
-
-          return (
-            <section key={slide.id}>
-              <h2>{slide.title}</h2>
-              <div className="slide-body">{formatBody(slide.body)}</div>
-
-              <SlideImages images={images} />
-
-              {slide.comment && (
-                <aside className="notes">
-                  {slide.comment}
-                  {slide.searchQuery && (
-                    <>
-                      {'\n\n'}
-                      Поиск: {slide.searchQuery}
-                    </>
-                  )}
-                </aside>
-              )}
-            </section>
-          )
-        })}
+          {slides.map((slide) => (
+            <SlideStack
+              key={slide.id}
+              slide={slide}
+              activePanel={slide.id === slideId ? panel : 'main'}
+            />
+          ))}
+        </div>
       </div>
-    </div>
     </RevealContext.Provider>
   )
 }
