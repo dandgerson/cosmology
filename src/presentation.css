@@ -1,0 +1,266 @@
+/* Full HD presentation (1920×1080) */
+:root {
+  --deck-w: 1920px;
+  --deck-h: 1080px;
+
+  /* Thumbnail frames (16∶9) */
+  --thumb-w: 400px;
+  --thumb-h: 225px;
+  --thumb-few-w: 520px;
+  --thumb-few-h: 293px;
+  --thumb-single-w: 960px;
+  --thumb-single-h: 540px;
+  --thumb-many-w: 300px;
+  --thumb-many-h: 169px;
+
+  /* Lightbox frame (16∶9, fits 1080p with chrome) */
+  --lightbox-w: 1760px;
+  --lightbox-h: 990px;
+}
+
+.reveal {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+.reveal .slides {
+  text-align: left;
+}
+
+.reveal .slides > section {
+  box-sizing: border-box;
+}
+
+.reveal .title-slide {
+  text-align: center;
+}
+
+.reveal .title-slide h1 {
+  font-size: 1.6em;
+  line-height: 1.25;
+  text-transform: none;
+  margin-bottom: 0.4em;
+}
+
+.reveal .deck-subtitle {
+  font-size: 0.55em;
+  opacity: 0.75;
+  margin-top: 0;
+}
+
+.reveal h2 {
+  font-size: 1.15em;
+  text-transform: none;
+  margin-bottom: 0.5em;
+  color: #e6edf3;
+}
+
+.reveal .slide-body {
+  font-size: 0.58em;
+  line-height: 1.45;
+  max-width: 95%;
+}
+
+.reveal .slide-body p {
+  margin: 0 0 0.6em;
+}
+
+/* Image gallery — fixed frames, object-fit normalizes aspect ratios */
+.reveal .slide-images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 0.75em;
+  justify-content: center;
+  align-items: stretch;
+  width: 100%;
+}
+
+.reveal .slide-image-btn {
+  flex-shrink: 0;
+  width: var(--thumb-w);
+  height: var(--thumb-h);
+  padding: 0;
+  border: none;
+  background: rgba(0, 0, 0, 0.35);
+  cursor: zoom-in;
+  border-radius: 4px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.reveal .slide-images.few .slide-image-btn {
+  width: var(--thumb-few-w);
+  height: var(--thumb-few-h);
+}
+
+.reveal .slide-images.single .slide-image-btn {
+  width: var(--thumb-single-w);
+  height: var(--thumb-single-h);
+}
+
+.reveal .slide-images.many .slide-image-btn {
+  width: var(--thumb-many-w);
+  height: var(--thumb-many-h);
+}
+
+.reveal .slide-image-btn:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.reveal .slide-image-btn:focus-visible {
+  outline: 2px solid #58a6ff;
+  outline-offset: 2px;
+}
+
+.reveal .slide-images img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  border-radius: 0;
+  box-shadow: none;
+  pointer-events: none;
+}
+
+.reveal .slide-number {
+  font-size: 14px;
+}
+
+/* Lightbox — rendered on document.body */
+body.lightbox-open {
+  overflow: hidden;
+}
+
+.image-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 2rem 5rem;
+  background: rgba(0, 0, 0, 0.92);
+  cursor: zoom-out;
+  animation: lightbox-fade-in 0.2s ease;
+}
+
+@keyframes lightbox-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.lightbox-figure {
+  margin: 0;
+  width: var(--lightbox-w);
+  height: var(--lightbox-h);
+  max-width: calc(100vw - 10rem);
+  max-height: calc(100vh - 4rem);
+  aspect-ratio: 16 / 9;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: default;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.lightbox-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  border-radius: 0;
+  box-shadow: none;
+  user-select: none;
+}
+
+.lightbox-counter {
+  flex-shrink: 0;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-family: system-ui, sans-serif;
+}
+
+.lightbox-nav {
+  flex-shrink: 0;
+  width: 3rem;
+  height: 3rem;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-size: 2rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  z-index: 1;
+}
+
+.lightbox-nav:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.lightbox-nav:disabled {
+  opacity: 0.25;
+  cursor: default;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  z-index: 1;
+}
+
+.lightbox-close:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+@media (max-width: 640px) {
+  .image-lightbox {
+    padding: 3rem 0.5rem;
+  }
+
+  .lightbox-figure {
+    width: 100%;
+    height: auto;
+    max-height: calc(100vh - 6rem);
+  }
+
+  .lightbox-nav {
+    position: absolute;
+    bottom: 1rem;
+  }
+
+  .lightbox-prev {
+    left: 0.5rem;
+  }
+
+  .lightbox-next {
+    right: 0.5rem;
+  }
+}
