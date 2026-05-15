@@ -6,8 +6,8 @@ import presentationMd from '../presentation.md?raw'
 import { parsePresentation } from '../lib/parsePresentation'
 import { getSlideImages } from '../lib/slideImages'
 import SlideImages from './SlideImages'
+import ThemeSwitcher from './ThemeSwitcher'
 import 'reveal.js/reveal.css'
-import 'reveal.js/theme/black.css'
 import '../presentation.css'
 
 const { deckTitle, slides } = parsePresentation(presentationMd)
@@ -47,9 +47,10 @@ export default function Presentation() {
 
   return (
     <RevealContext.Provider value={reveal}>
-    <div className="reveal" ref={deckRef}>
+      <ThemeSwitcher />
+      <div className="reveal" ref={deckRef}>
       <div className="slides">
-        <section className="title-slide" data-background-color="#0d1117">
+        <section className="title-slide">
           <h1>{deckTitle}</h1>
           <p className="deck-subtitle">
             Космологические модели разных культур и традиций
@@ -60,7 +61,7 @@ export default function Presentation() {
           const images = getSlideImages(slide.id)
 
           return (
-            <section key={slide.id} data-background-color="#0d1117">
+            <section key={slide.id}>
               <h2>{slide.title}</h2>
               <div className="slide-body">{formatBody(slide.body)}</div>
 
