@@ -9,6 +9,7 @@ A **Reveal.js** presentation (React + TypeScript + Vite) about cosmological mode
 | `npm run dev` | Local dev server (default: http://localhost:5173) |
 | `npm run build` | Typecheck + production build to `dist/` |
 | `npm run preview` | Serve the production build locally |
+| `npm run deploy` | Production deploy via [Vercel CLI](https://vercel.com/docs/cli) (`npx vercel --prod`) |
 | `npm run lint` | ESLint |
 
 ## Editing content
@@ -35,13 +36,13 @@ Keyboard: **← →** change horizontal slides; **↑ ↓** move between vertica
 **CLI (optional):**
 
 ```bash
-npx vercel
+npm run deploy
 ```
 
-For production:
+Same as `npx vercel --prod` (production). Preview deployment:
 
 ```bash
-npx vercel --prod
+npx vercel
 ```
 
 ## Tech stack
