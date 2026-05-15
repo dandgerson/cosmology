@@ -9,7 +9,9 @@ A **Reveal.js** presentation (React + TypeScript + Vite) about cosmological mode
 | `npm run dev` | Local dev server (default: http://localhost:5173) |
 | `npm run build` | Typecheck + production build to `dist/` |
 | `npm run preview` | Serve the production build locally |
-| `npm run deploy` | Production deploy via [Vercel CLI](https://vercel.com/docs/cli) (`npx vercel --prod`) |
+| `npm run deploy` | Production deploy ([Vercel CLI](https://vercel.com/docs/cli); run `deploy:login` once first) |
+| `npm run deploy:preview` | Preview deployment to Vercel |
+| `npm run deploy:login` | Log in / refresh Vercel CLI token (fixes “token is not valid”) |
 | `npm run lint` | ESLint |
 
 ## Editing content
@@ -35,15 +37,25 @@ Keyboard: **← →** change horizontal slides; **↑ ↓** move between vertica
 
 **CLI (optional):**
 
+First time (or after *“The specified token is not valid”*):
+
+```bash
+npm run deploy:login
+```
+
+Then deploy:
+
 ```bash
 npm run deploy
 ```
 
-Same as `npx vercel --prod` (production). Preview deployment:
+Preview deployment:
 
 ```bash
-npx vercel
+npm run deploy:preview
 ```
+
+If deploy still fails, check that a bad `VERCEL_TOKEN` is not set in your shell or CI (unset it locally, or create a new token in the Vercel dashboard).
 
 ## Tech stack
 
