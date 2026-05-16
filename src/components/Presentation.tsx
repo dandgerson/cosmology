@@ -26,13 +26,13 @@ function SlideStack({
         <section key={panel} data-panel={panel}>
           <SlidePanelNav slide={slide} activePanel={activePanel} />
           <SlidePanelContent slide={slide} panel={panel} />
-          {slide.comment && panel === 'main' && (
+          {slide.notes && panel === 'main' && (
             <aside className="notes">
-              {slide.comment}
-              {slide.searchQuery && (
+              {slide.notes}
+              {slide.search && (
                 <>
                   {'\n\n'}
-                  Поиск: {slide.searchQuery}
+                  Поиск: {slide.search}
                 </>
               )}
             </aside>

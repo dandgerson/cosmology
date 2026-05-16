@@ -1,9 +1,10 @@
 import { useCallback, useEffect } from 'react'
 import { createPortal } from 'react-dom'
+import type { SlideImage } from '../lib/parsePresentation'
 import { useReveal } from '../RevealContext'
 
 type ImageLightboxProps = {
-  images: string[]
+  images: SlideImage[]
   index: number
   onClose: () => void
   onIndexChange: (index: number) => void
@@ -16,9 +17,12 @@ export default function ImageLightbox({
   onIndexChange,
 }: ImageLightboxProps) {
   const reveal = useReveal()
+  const current = images[index]
   const hasPrev = index > 0
   const hasNext = index < images.length - 1
   const showNav = images.length > 1
+  const ariaLabel =
+    current?.alt || `Изображение ${index + 1} из ${images.length}`
 
   const goPrev = useCallback(() => {
     if (hasPrev) onIndexChange(index - 1)
@@ -70,12 +74,14 @@ export default function ImageLightbox({
     }
   }, [onClose, goPrev, goNext])
 
+  if (!current) return null
+
   return createPortal(
     <div
       className="image-lightbox"
       role="dialog"
       aria-modal="true"
-      aria-label="Просмотр изображения"
+      aria-label={ariaLabel}
       onClick={onClose}
     >
       {showNav && (
@@ -94,10 +100,21 @@ export default function ImageLightbox({
       )}
 
       <figure className="lightbox-figure" onClick={(e) => e.stopPropagation()}>
-        <img src={images[index]} alt="" className="lightbox-image" />
-        {showNav && (
-          <figcaption className="lightbox-counter">
-            {index + 1} / {images.length}
+        <img
+          src={current.src}
+          alt={current.alt}
+          className="lightbox-image"
+        />
+        {(showNav || current.description) && (
+          <figcaption className="lightbox-caption">
+            {showNav && (
+              <span className="lightbox-counter">
+                {index + 1} / {images.length}
+              </span>
+            )}
+            {current.description && (
+              <p className="lightbox-description">{current.description}</p>
+            )}
           </figcaption>
         )}
       </figure>

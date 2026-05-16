@@ -1,8 +1,8 @@
 import { Link } from '@tanstack/react-router'
 import type { Slide } from '../lib/parsePresentation'
 import {
+  getPanelLabel,
   getSlidePanels,
-  PANEL_LABELS,
   type PanelId,
 } from '../lib/slidePanels'
 
@@ -26,7 +26,7 @@ export default function SlidePanelNav({ slide, activePanel }: SlidePanelNavProps
           className={panel === activePanel ? 'active' : undefined}
           onClick={(e) => e.stopPropagation()}
         >
-          {PANEL_LABELS[panel]}
+          {getPanelLabel(panel)}
         </Link>
       ))}
     </nav>

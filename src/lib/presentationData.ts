@@ -1,9 +1,23 @@
 import presentationMd from '../presentation.md?raw'
+import { DEFAULT_PANELS } from './presentationConfig'
 import { parsePresentation } from './parsePresentation'
 
-export const presentation = parsePresentation(presentationMd)
+function loadPresentation() {
+  try {
+    return parsePresentation(presentationMd)
+  } catch (error) {
+    console.error('[presentation] failed to parse presentation.md', error)
+    return {
+      title: 'Ошибка загрузки',
+      meta: { panels: { ...DEFAULT_PANELS } },
+      slides: [],
+    }
+  }
+}
 
-export const { deckTitle, slides } = presentation
+export const presentation = loadPresentation()
+
+export const { title: deckTitle, slides, meta } = presentation
 
 export function getSlideById(slideId: string) {
   return slides.find((s) => s.id === slideId)

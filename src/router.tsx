@@ -6,7 +6,7 @@ import {
 } from '@tanstack/react-router'
 import RootLayout from './routes/RootLayout'
 import { isPanelId } from './lib/slidePanels'
-import { getSlideById } from './lib/presentationData'
+import { getSlideById, meta } from './lib/presentationData'
 
 const rootRoute = createRootRoute({
   component: RootLayout,
@@ -38,7 +38,7 @@ const slidePanelRoute = createRoute({
     if (!getSlideById(params.slideId)) {
       throw redirect({ to: '/' })
     }
-    if (!isPanelId(params.panel)) {
+    if (!isPanelId(params.panel) || !meta.panels[params.panel]) {
       throw redirect({
         to: '/slide/$slideId/$panel',
         params: { slideId: params.slideId, panel: 'main' },

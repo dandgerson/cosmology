@@ -1,22 +1,33 @@
-import { SLIDE_IMAGE_DIRS } from './presentationConfig'
-
-// Must stay a compile-time string literal (Vite import.meta.glob). Sync with SLIDE_IMAGE_* in presentationConfig.
+// Vite requires a string literal here (not imported from config).
 const imageModules = import.meta.glob('../img/**/*.{jpg,jpeg,png,gif,webp}', {
   eager: true,
   import: 'default',
 }) as Record<string, string>
 
-function normalizeSlideId(id: string): string {
-  return id.toLowerCase().replace('а', 'a').replace('б', 'b')
+const knownPaths = new Set(
+  Object.keys(imageModules).map((key) =>
+    key.replace(/^(\.\.\/)+/, '').replace(/^\//, ''),
+  ),
+)
+
+function moduleKey(relativePath: string): string {
+  return `../${relativePath.replace(/^\//, '')}`
 }
 
-export function getSlideImages(slideId: string): string[] {
-  const normalized = normalizeSlideId(slideId)
-  const dir = SLIDE_IMAGE_DIRS[slideId] ?? SLIDE_IMAGE_DIRS[normalized]
-  if (!dir) return []
+export function resolveImagePath(relativePath: string): string {
+  const key = moduleKey(relativePath)
+  const url = imageModules[key]
+  if (url) return url
+  return new URL(`../${relativePath.replace(/^\//, '')}`, import.meta.url).href
+}
 
-  return Object.entries(imageModules)
-    .filter(([path]) => path.includes(`${dir}/`))
-    .sort(([a], [b]) => a.localeCompare(b))
-    .map(([, url]) => url)
+export function warnIfImageMissing(path: string): void {
+  if (import.meta.env.PROD) return
+  const normalized = path.replace(/^\//, '')
+  const found = [...knownPaths].some(
+    (p) => p === normalized || p.endsWith(`/${normalized}`),
+  )
+  if (!found) {
+    console.warn(`[presentation] image not found: ${path}`)
+  }
 }

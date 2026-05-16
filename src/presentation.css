@@ -19,6 +19,8 @@
 }
 
 .reveal {
+  width: 100%;
+  height: 100%;
   font-family: 'Segoe UI', system-ui, sans-serif;
 }
 
@@ -377,13 +379,25 @@ body.lightbox-open {
   user-select: none;
 }
 
-.lightbox-counter {
+.lightbox-caption {
   flex-shrink: 0;
   margin: 0.5rem 0 0;
   padding: 0;
+  text-align: center;
+  font-family: system-ui, sans-serif;
+}
+
+.lightbox-counter {
+  display: block;
   font-size: 0.9rem;
   color: rgba(255, 255, 255, 0.7);
-  font-family: system-ui, sans-serif;
+}
+
+.lightbox-description {
+  margin: 0.35rem 0 0;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.4;
 }
 
 .lightbox-nav {

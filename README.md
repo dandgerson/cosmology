@@ -16,9 +16,74 @@ A **Reveal.js** presentation (React + TypeScript + Vite) about cosmological mode
 
 ## Editing content
 
-- **Slides:** Edit `src/presentation.md`. Blocks are separated by `---`. Each slide uses the field labels defined in [`src/lib/presentationConfig.ts`](src/lib/presentationConfig.ts) (e.g. **Заголовок:**, **Текст на слайде:**, **Детали:**, **Статья:**, **Источники:**).
-- **Image folders:** Map slide ids to folders under `src/img/` via `SLIDE_IMAGE_DIRS` in `presentationConfig.ts`. Add new extensions in the static glob in [`src/lib/slideImages.ts`](src/lib/slideImages.ts) (Vite requires a literal string).
-- **Themes:** Theme switcher in the UI; choice is stored in `localStorage`.
+All slide text, panel tab labels, and image galleries live in **`src/presentation.md`**. Parser constants (section delimiter, field headings) are in [`src/lib/presentationConfig.ts`](src/lib/presentationConfig.ts) only—no Russian field labels or image folder maps.
+
+### Frontmatter
+
+YAML at the top configures the deck:
+
+```yaml
+---
+panels:
+  main:
+    label: Слайд
+  details:
+    label: Детали
+    showImages: true
+  article:
+    label: Статья
+  sources:
+    label: Источники
+---
+```
+
+- **`panels`** — tab labels and optional `showImages: true` (gallery on that panel; main always shows images when present).
+
+### Slides
+
+Separate slides with `---`. Each slide starts with a language-neutral header and `###` sections:
+
+```markdown
+## slide/2
+
+### title
+*Slide title*
+
+### body
+> Main slide text (blockquote optional)
+
+### notes
+Speaker notes (Reveal notes plugin)
+
+### search
+google image search query
+
+### details
+Optional extra panel content
+
+### article
+Markdown for the article panel
+
+### sources
+Markdown list for sources
+
+### images
+![Alt text](img/2/1.jpg)
+Caption on the next line, or inline: ![Alt](img/2/1.jpg) — short caption
+```
+
+Field headings are fixed: `title`, `body`, `notes`, `search`, `details`, `article`, `sources`, `images`.
+
+### Images
+
+- One folder per slide: `src/img/{slideId}/` (e.g. slide 2 → `src/img/2/`).
+- Name files `1.jpg`, `2.jpeg`, … in gallery order; reference them as `img/2/1.jpg` in markdown.
+- List each file under the slide’s `### images` block; order in markdown = gallery order.
+- Optional `alt` in `![...]`; description on the following line(s) or after ` — ` on the same line.
+
+### Themes
+
+Theme switcher in the UI; choice is stored in `localStorage`.
 
 ## URLs
 
@@ -60,7 +125,7 @@ If deploy still fails, check that a bad `VERCEL_TOKEN` is not set in your shell 
 ## Tech stack
 
 - React 19, TypeScript, Vite  
-- Reveal.js 6, TanStack Router, react-markdown  
+- Reveal.js 6, TanStack Router, react-markdown, gray-matter  
 
 ## License
 

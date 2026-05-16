@@ -1,8 +1,11 @@
 import Markdown from 'react-markdown'
 import type { Slide } from '../lib/parsePresentation'
-import { PANEL_LABELS, type PanelId } from '../lib/slidePanels'
+import {
+  getPanelLabel,
+  shouldShowImages,
+  type PanelId,
+} from '../lib/slidePanels'
 import SlideImages from './SlideImages'
-import { getSlideImages } from '../lib/slideImages'
 
 function formatBody(text: string) {
   return text.split(/\n\n+/).map((paragraph, i) => (
@@ -16,7 +19,7 @@ type SlidePanelContentProps = {
 }
 
 export default function SlidePanelContent({ slide, panel }: SlidePanelContentProps) {
-  const images = getSlideImages(slide.id)
+  const images = shouldShowImages(panel) ? slide.images : []
 
   switch (panel) {
     case 'main':
@@ -24,7 +27,7 @@ export default function SlidePanelContent({ slide, panel }: SlidePanelContentPro
         <>
           <h2>{slide.title}</h2>
           <div className="slide-body">{formatBody(slide.body)}</div>
-          <SlideImages images={images} />
+          {images.length > 0 && <SlideImages images={images} />}
         </>
       )
 
@@ -32,7 +35,7 @@ export default function SlidePanelContent({ slide, panel }: SlidePanelContentPro
       return (
         <>
           <h2>{slide.title}</h2>
-          <p className="panel-label">{PANEL_LABELS.details}</p>
+          <p className="panel-label">{getPanelLabel('details')}</p>
           <div className="slide-body panel-scroll">{formatBody(slide.details)}</div>
           {images.length > 0 && <SlideImages images={images} />}
         </>
@@ -42,7 +45,7 @@ export default function SlidePanelContent({ slide, panel }: SlidePanelContentPro
       return (
         <>
           <h2>{slide.title}</h2>
-          <p className="panel-label">{PANEL_LABELS.article}</p>
+          <p className="panel-label">{getPanelLabel('article')}</p>
           <article className="slide-article panel-scroll">
             <Markdown>{slide.article}</Markdown>
           </article>
@@ -53,7 +56,7 @@ export default function SlidePanelContent({ slide, panel }: SlidePanelContentPro
       return (
         <>
           <h2>{slide.title}</h2>
-          <p className="panel-label">{PANEL_LABELS.sources}</p>
+          <p className="panel-label">{getPanelLabel('sources')}</p>
           <div className="slide-sources panel-scroll">
             <Markdown>{slide.sources}</Markdown>
           </div>

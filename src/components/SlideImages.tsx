@@ -1,8 +1,9 @@
 import { useState } from 'react'
+import type { SlideImage } from '../lib/parsePresentation'
 import ImageLightbox from './ImageLightbox'
 
 type SlideImagesProps = {
-  images: string[]
+  images: SlideImage[]
 }
 
 export default function SlideImages({ images }: SlideImagesProps) {
@@ -16,15 +17,22 @@ export default function SlideImages({ images }: SlideImagesProps) {
   return (
     <>
       <div className={`slide-images ${sizeClass}`}>
-        {images.map((src, i) => (
+        {images.map((image, i) => (
           <button
-            key={src}
+            key={image.path}
             type="button"
             className="slide-image-btn"
-            aria-label={`Увеличить изображение ${i + 1} из ${images.length}`}
+            aria-label={
+              image.alt ||
+              `Увеличить изображение ${i + 1} из ${images.length}`
+            }
             onClick={() => setLightboxIndex(i)}
           >
-            <img src={src} alt="" loading="lazy" />
+            <img
+              src={image.src}
+              alt={image.alt}
+              loading="lazy"
+            />
           </button>
         ))}
       </div>
