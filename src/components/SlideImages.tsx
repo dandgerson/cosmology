@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import type { SlideImage } from '../lib/parsePresentation'
 import ImageLightbox from './ImageLightbox'
+import SlideImageButton from './SlideImageButton'
 
 type SlideImagesProps = {
   images: SlideImage[]
@@ -16,24 +17,15 @@ export default function SlideImages({ images }: SlideImagesProps) {
 
   return (
     <>
-      <div className={`slide-images ${sizeClass}`}>
+      <div className={`slide-images ${sizeClass}`} data-prevent-swipe>
         {images.map((image, i) => (
-          <button
+          <SlideImageButton
             key={image.path}
-            type="button"
-            className="slide-image-btn"
-            aria-label={
-              image.alt ||
-              `Увеличить изображение ${i + 1} из ${images.length}`
-            }
-            onClick={() => setLightboxIndex(i)}
-          >
-            <img
-              src={image.src}
-              alt={image.alt}
-              loading="lazy"
-            />
-          </button>
+            image={image}
+            index={i}
+            total={images.length}
+            onOpen={() => setLightboxIndex(i)}
+          />
         ))}
       </div>
 

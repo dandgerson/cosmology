@@ -91,6 +91,14 @@ Theme switcher in the UI; choice is stored in `localStorage`.
 
 Keyboard: **← →** change horizontal slides; **↑ ↓** move between vertical panels when a slide has extra content.
 
+## Mobile
+
+The deck is **mobile-first**: on viewports under 768px wide it uses a compact slide size, touch swipes (Reveal built-in), larger tap targets for panel tabs and images, and safe-area padding for notched phones.
+
+- Open the deployed URL on your phone (or use **Add to Home Screen** for a fullscreen-like app).
+- **Swipe** horizontally for previous/next slide; **swipe** vertically when a slide has multiple panels (main / details / article).
+- Pinch/zoom is handled by Reveal’s scale limits; rotate the device for more horizontal space on long text.
+
 ## Deploy on Vercel
 
 1. Push the repo to GitHub (or GitLab / Bitbucket).

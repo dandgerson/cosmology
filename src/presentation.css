@@ -1,21 +1,15 @@
-/* Full HD presentation (1920×1080) */
+/* Mobile-first layout tokens; desktop overrides at end of file */
 :root {
-  --deck-w: 1920px;
-  --deck-h: 1080px;
-
-  /* Thumbnail frames (16∶9) */
-  --thumb-w: 400px;
-  --thumb-h: 225px;
-  --thumb-few-w: 520px;
-  --thumb-few-h: 293px;
-  --thumb-single-w: 960px;
-  --thumb-single-h: 540px;
-  --thumb-many-w: 300px;
-  --thumb-many-h: 169px;
-
-  /* Lightbox frame (16∶9, fits 1080p with chrome) */
-  --lightbox-w: 1760px;
-  --lightbox-h: 990px;
+  --thumb-w: 8rem;
+  --thumb-h: 6.5rem;
+  --thumb-w-few: 10rem;
+  --thumb-h-few: 8.25rem;
+  --thumb-w-single: 100%;
+  --thumb-h-single: 11rem;
+  --thumb-single-max-w: 28rem;
+  --thumb-few-max-w: 36rem;
+  --panel-scroll-max: 50dvh;
+  --touch-min: 44px;
 }
 
 .reveal {
@@ -67,19 +61,32 @@
   margin: 0 0 0.6em;
 }
 
-/* Image gallery — fixed frames, object-fit normalizes aspect ratios */
+/* Image gallery — fixed tiles, centered rows, cover crop */
 .reveal .slide-images {
+  position: relative;
+  z-index: 2;
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 0.75em;
   justify-content: center;
-  align-items: stretch;
+  align-items: center;
+  gap: 0.65rem;
+  margin-top: 0.75em;
   width: 100%;
+  touch-action: manipulation;
+}
+
+.reveal .slide-images.few {
+  max-width: var(--thumb-few-max-w);
+  margin-inline: auto;
+}
+
+.reveal .slide-images.single {
+  max-width: var(--thumb-single-max-w);
+  margin-inline: auto;
 }
 
 .reveal .slide-image-btn {
-  flex-shrink: 0;
+  flex: 0 0 auto;
   width: var(--thumb-w);
   height: var(--thumb-h);
   padding: 0;
@@ -88,25 +95,21 @@
   cursor: zoom-in;
   border-radius: 4px;
   overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: block;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
 }
 
 .reveal .slide-images.few .slide-image-btn {
-  width: var(--thumb-few-w);
-  height: var(--thumb-few-h);
+  width: var(--thumb-w-few);
+  height: var(--thumb-h-few);
 }
 
 .reveal .slide-images.single .slide-image-btn {
-  width: var(--thumb-single-w);
-  height: var(--thumb-single-h);
-}
-
-.reveal .slide-images.many .slide-image-btn {
-  width: var(--thumb-many-w);
-  height: var(--thumb-many-h);
+  width: var(--thumb-w-single);
+  height: var(--thumb-h-single);
 }
 
 .reveal .slide-image-btn:hover {
@@ -123,15 +126,17 @@
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   object-position: center;
   border-radius: 0;
   box-shadow: none;
   pointer-events: none;
 }
 
+/* Built-in Reveal chrome replaced by .deck-nav */
+.reveal .controls,
 .reveal .slide-number {
-  font-size: 14px;
+  display: none !important;
 }
 
 /* Per-slide panel navigation */
@@ -145,7 +150,10 @@
 }
 
 .slide-panel-nav a {
-  padding: 0.25em 0.65em;
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--touch-min);
+  padding: 0.35em 0.75em;
   border-radius: 4px;
   border: 1px solid color-mix(in srgb, var(--r-main-color) 25%, transparent);
   color: var(--r-main-color);
@@ -177,9 +185,10 @@
 }
 
 .panel-scroll {
-  max-height: 42vh;
+  max-height: var(--panel-scroll-max);
   overflow-y: auto;
   padding-right: 0.5em;
+  -webkit-overflow-scrolling: touch;
 }
 
 .slide-article,
@@ -218,8 +227,8 @@
   --switcher-active-fg: #79c0ff;
 
   position: fixed;
-  top: 1rem;
-  right: 1rem;
+  top: max(0.5rem, env(safe-area-inset-top));
+  right: max(0.5rem, env(safe-area-inset-right));
   z-index: 50;
   font-family: system-ui, sans-serif;
   font-size: 14px;
@@ -246,7 +255,9 @@ html[data-reveal-theme='solarized'] {
   display: flex;
   align-items: center;
   gap: 0.4rem;
+  min-height: var(--touch-min);
   padding: 0.45rem 0.75rem;
+  -webkit-tap-highlight-color: transparent;
   border: 1px solid var(--switcher-border);
   border-radius: 6px;
   background: var(--switcher-bg);
@@ -340,6 +351,7 @@ body.lightbox-open {
   padding: 2rem 5rem;
   background: rgba(0, 0, 0, 0.92);
   cursor: zoom-out;
+  touch-action: manipulation;
   animation: lightbox-fade-in 0.2s ease;
 }
 
@@ -354,10 +366,10 @@ body.lightbox-open {
 
 .lightbox-figure {
   margin: 0;
-  width: var(--lightbox-w);
-  height: var(--lightbox-h);
-  max-width: calc(100vw - 10rem);
-  max-height: calc(100vh - 4rem);
+  width: min(100vw - 2rem, 100%);
+  height: auto;
+  max-width: calc(100vw - 2rem);
+  max-height: calc(100dvh - 6rem);
   aspect-ratio: 16 / 9;
   display: flex;
   flex-direction: column;
@@ -402,8 +414,10 @@ body.lightbox-open {
 
 .lightbox-nav {
   flex-shrink: 0;
-  width: 3rem;
-  height: 3rem;
+  width: var(--touch-min);
+  height: var(--touch-min);
+  min-width: var(--touch-min);
+  min-height: var(--touch-min);
   border: none;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.12);
@@ -426,10 +440,10 @@ body.lightbox-open {
 
 .lightbox-close {
   position: absolute;
-  top: 1rem;
-  right: 1rem;
-  width: 2.5rem;
-  height: 2.5rem;
+  top: max(0.5rem, env(safe-area-inset-top));
+  right: max(0.5rem, env(safe-area-inset-right));
+  width: var(--touch-min);
+  height: var(--touch-min);
   border: none;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.12);
@@ -445,27 +459,328 @@ body.lightbox-open {
   background: rgba(255, 255, 255, 0.25);
 }
 
-@media (max-width: 640px) {
-  .image-lightbox {
-    padding: 3rem 0.5rem;
+/* Mobile deck: compact chrome, swipe hint */
+html[data-mobile-deck='true'] .reveal .slides > section {
+  padding: 0.35em 0.5em;
+}
+
+html[data-mobile-deck='true'] .reveal h2 {
+  font-size: 1em;
+}
+
+html[data-mobile-deck='true'] .reveal .slide-body {
+  font-size: 0.62em;
+  max-width: 100%;
+}
+
+html[data-mobile-deck='true'] .slide-panel-nav {
+  font-size: 0.5em;
+}
+
+html[data-mobile-deck='true'] .theme-switcher-label {
+  display: none;
+}
+
+html[data-mobile-deck='true'] .image-lightbox {
+  padding: max(3rem, env(safe-area-inset-top)) 0.5rem
+    max(4rem, env(safe-area-inset-bottom));
+}
+
+html[data-mobile-deck='true'] .lightbox-nav {
+  position: absolute;
+  bottom: max(1rem, env(safe-area-inset-bottom));
+}
+
+html[data-mobile-deck='true'] .lightbox-prev {
+  left: max(0.5rem, env(safe-area-inset-left));
+}
+
+html[data-mobile-deck='true'] .lightbox-next {
+  right: max(0.5rem, env(safe-area-inset-right));
+}
+
+/* Deck shell: slides fill space; nav docked below (no overlap) */
+.deck-shell {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  height: 100dvh;
+  min-height: 0;
+}
+
+.deck-shell .reveal {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+}
+
+.deck-nav {
+  --deck-nav-h: 3.25rem;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.65rem;
+  min-height: var(--deck-nav-h);
+  padding: 0.35rem 0.75rem;
+  padding-bottom: max(0.35rem, env(safe-area-inset-bottom));
+  border-top: 1px solid color-mix(in srgb, var(--r-main-color, #ccc) 18%, transparent);
+  background: color-mix(in srgb, var(--r-background-color, #111) 98%, transparent);
+  font-family: system-ui, sans-serif;
+  z-index: 30;
+}
+
+.deck-nav-cluster {
+  display: flex;
+  gap: 0.2rem;
+}
+
+.deck-nav-cluster--vertical {
+  flex-direction: column;
+}
+
+.deck-nav-cluster--horizontal {
+  flex-direction: row;
+  align-items: center;
+}
+
+.deck-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--touch-min);
+  min-height: var(--touch-min);
+  padding: 0.2rem 0.5rem;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--r-link-color, #e94560);
+  font-size: 1.35rem;
+  font-weight: 300;
+  line-height: 1;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.deck-nav-btn--slide {
+  font-size: 1.5rem;
+  font-weight: 400;
+}
+
+.deck-nav-btn:disabled {
+  opacity: 0.22;
+  cursor: default;
+}
+
+.deck-nav-btn:not(:disabled):hover,
+.deck-nav-btn:not(:disabled):focus-visible {
+  background: color-mix(in srgb, var(--r-link-color, #e94560) 14%, transparent);
+}
+
+.deck-nav-btn:focus-visible,
+.deck-nav-counter:focus-visible {
+  outline: 2px solid #58a6ff;
+  outline-offset: 2px;
+}
+
+.deck-nav-counter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--touch-min);
+  min-width: 4.5rem;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid color-mix(in srgb, var(--r-main-color, #ccc) 28%, transparent);
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--r-main-color, #ccc) 10%, transparent);
+  color: var(--r-main-color, #e6edf3);
+  font-size: 0.95rem;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.deck-nav-counter:hover {
+  border-color: var(--r-link-color, #e94560);
+}
+
+.deck-nav-counter-current {
+  font-weight: 600;
+}
+
+.deck-nav-counter-sep {
+  opacity: 0.45;
+  margin: 0 0.2em;
+}
+
+/* Slide picker (opened from counter) */
+.slide-picker-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10001;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 0.5rem;
+  padding-bottom: calc(var(--deck-nav-h, 3.25rem) + 0.35rem + env(safe-area-inset-bottom));
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.slide-picker {
+  display: flex;
+  flex-direction: column;
+  width: min(22rem, calc(100vw - 1rem));
+  max-height: min(58dvh, 26rem);
+  border-radius: 10px;
+  border: 1px solid color-mix(in srgb, var(--r-main-color, #ccc) 22%, transparent);
+  background: var(--r-background-color, #111);
+  color: var(--r-main-color, #e6edf3);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+  overflow: hidden;
+}
+
+.slide-picker-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.65rem 0.85rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--r-main-color, #ccc) 15%, transparent);
+}
+
+.slide-picker-title {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.slide-picker-close {
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: inherit;
+  font-size: 1.35rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.slide-picker-list {
+  list-style: none;
+  margin: 0;
+  padding: 0.35rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.slide-picker-item {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.55rem 0.65rem;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.slide-picker-item:hover {
+  background: color-mix(in srgb, var(--r-main-color, #ccc) 10%, transparent);
+}
+
+.slide-picker-item.is-active {
+  background: color-mix(in srgb, var(--r-link-color, #e94560) 18%, transparent);
+}
+
+.slide-picker-id {
+  flex-shrink: 0;
+  min-width: 1.75rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  opacity: 0.75;
+}
+
+.slide-picker-label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+body.slide-picker-open {
+  overflow: hidden;
+}
+
+.mobile-nav-hint {
+  display: none;
+  position: fixed;
+  bottom: calc(var(--deck-nav-h, 3.25rem) + 0.5rem + env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 40;
+  margin: 0;
+  padding: 0.35rem 0.75rem;
+  font-family: system-ui, sans-serif;
+  font-size: 12px;
+  color: color-mix(in srgb, var(--r-main-color, #e6edf3) 70%, transparent);
+  background: color-mix(in srgb, var(--r-background-color, #111) 85%, transparent);
+  border-radius: 999px;
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+html[data-mobile-deck='true'] .mobile-nav-hint {
+  display: block;
+}
+
+/* Desktop / wide: larger fixed thumbnail frames */
+@media (min-width: 768px) {
+  :root {
+    --thumb-w: 11.5rem;
+    --thumb-h: 9.5rem;
+    --thumb-w-few: 14rem;
+    --thumb-h-few: 11.5rem;
+    --thumb-h-single: 15rem;
+    --thumb-single-max-w: 40rem;
+    --thumb-few-max-w: 48rem;
+    --panel-scroll-max: 42vh;
   }
+}
+
+/* Landscape phones & short viewports */
+@media (min-width: 768px) and (max-height: 520px) {
+  :root {
+    --thumb-w: 9rem;
+    --thumb-h: 7.25rem;
+    --thumb-w-few: 11rem;
+    --thumb-h-few: 9rem;
+    --thumb-h-single: 10.5rem;
+    --thumb-single-max-w: 30rem;
+    --thumb-few-max-w: 38rem;
+  }
+}
+
+@media (min-width: 768px) {
 
   .lightbox-figure {
-    width: 100%;
-    height: auto;
-    max-height: calc(100vh - 6rem);
+    width: min(1760px, calc(100vw - 10rem));
+    height: min(990px, calc(100dvh - 4rem));
+    max-width: calc(100vw - 10rem);
+    max-height: calc(100dvh - 4rem);
   }
 
-  .lightbox-nav {
-    position: absolute;
-    bottom: 1rem;
-  }
-
-  .lightbox-prev {
-    left: 0.5rem;
-  }
-
-  .lightbox-next {
-    right: 0.5rem;
+  .mobile-nav-hint {
+    display: none !important;
   }
 }

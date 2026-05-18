@@ -2,10 +2,13 @@ import { useEffect, useRef, useState } from 'react'
 import Reveal from 'reveal.js'
 import Notes from 'reveal.js/plugin/notes'
 import { RevealContext, type DeckApi } from '../RevealContext'
+import { useRevealLayout } from '../hooks/useRevealLayout'
 import { slides } from '../lib/presentationData'
+import { getRevealLayoutSize, getRevealOptions } from '../lib/revealLayout'
 import { getSlidePanels, type PanelId } from '../lib/slidePanels'
 import { useRevealRouterSync } from '../hooks/useRevealRouterSync'
 import { useSlideRoute } from '../hooks/useSlideRoute'
+import DeckNavigation from './DeckNavigation'
 import SlidePanelContent from './SlidePanelContent'
 import SlidePanelNav from './SlidePanelNav'
 import 'reveal.js/reveal.css'
@@ -49,20 +52,19 @@ export default function Presentation() {
   const { slideId, panel } = useSlideRoute()
 
   useRevealRouterSync(reveal)
+  useRevealLayout(reveal)
 
   useEffect(() => {
     if (!deckRef.current) return
 
+    const size = getRevealLayoutSize()
+    document.documentElement.dataset.mobileDeck = size.isMobile
+      ? 'true'
+      : 'false'
+
     const deck = new Reveal(deckRef.current, {
+      ...getRevealOptions(size),
       plugins: [Notes],
-      hash: false,
-      history: false,
-      slideNumber: 'c/t',
-      transition: 'slide',
-      backgroundTransition: 'fade',
-      width: 1920,
-      height: 1080,
-      margin: 0.06,
     })
 
     deck.initialize()
@@ -87,6 +89,7 @@ export default function Presentation() {
           ))}
         </div>
       </div>
+      <DeckNavigation />
     </RevealContext.Provider>
   )
 }

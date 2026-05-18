@@ -82,6 +82,7 @@ export default function ImageLightbox({
       role="dialog"
       aria-modal="true"
       aria-label={ariaLabel}
+      data-prevent-swipe
       onClick={onClose}
     >
       {showNav && (
