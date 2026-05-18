@@ -89,7 +89,7 @@ Theme switcher in the UI; choice is stored in `localStorage`.
 - `/slide/:slideId/main` — main panel (e.g. `/slide/2/main`); `slideId` is position in the file (1-based)  
 - `/slide/:slideId/details`, `/article`, `/sources` when those fields exist in markdown  
 
-Keyboard: **← →** change horizontal slides; **↑ ↓** move between vertical panels when a slide has extra content.
+Keyboard: **← →** change horizontal slides; **↑ ↓** move between vertical panels when a slide has extra content. Bottom-right: Reveal arrow controls and a **slide counter** (tap to open a jump list).
 
 ## Mobile
 
@@ -131,7 +131,7 @@ If deploy still fails, check that a bad `VERCEL_TOKEN` is not set in your shell 
 ## Tech stack
 
 - React 19, TypeScript, Vite  
-- Reveal.js 6, TanStack Router, react-markdown, gray-matter  
+- Reveal.js 6, TanStack Router, react-markdown, yaml  
 
 ## License
 

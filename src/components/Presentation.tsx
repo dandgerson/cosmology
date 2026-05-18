@@ -4,6 +4,7 @@ import Notes from 'reveal.js/plugin/notes'
 import { RevealContext, type DeckApi } from '../RevealContext'
 import { useRevealLayout } from '../hooks/useRevealLayout'
 import { slides } from '../lib/presentationData'
+import { updateRevealControls } from '../lib/revealControls'
 import { getRevealLayoutSize, getRevealOptions } from '../lib/revealLayout'
 import { getSlidePanels, type PanelId } from '../lib/slidePanels'
 import { useRevealRouterSync } from '../hooks/useRevealRouterSync'
@@ -67,10 +68,16 @@ export default function Presentation() {
       plugins: [Notes],
     })
 
-    deck.initialize()
-    setReveal(deck)
+    let cancelled = false
+
+    void deck.initialize().then(() => {
+      if (cancelled) return
+      updateRevealControls(deck)
+      setReveal(deck)
+    })
 
     return () => {
+      cancelled = true
       deck.destroy()
       setReveal(null)
     }

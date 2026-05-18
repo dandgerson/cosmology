@@ -12,6 +12,22 @@ const rootRoute = createRootRoute({
   component: RootLayout,
 })
 
+const slidePanelRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/slide/$slideId/$panel',
+  beforeLoad: ({ params }) => {
+    if (!getSlideById(params.slideId)) {
+      redirectToFirstSlide()
+    }
+    if (!isPanelId(params.panel) || !meta.panels[params.panel]) {
+      throw redirect({
+        to: slidePanelRoute.to,
+        params: { slideId: params.slideId, panel: 'main' },
+      })
+    }
+  },
+})
+
 const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/',
@@ -19,7 +35,7 @@ const indexRoute = createRoute({
     const first = getFirstSlideId()
     if (first) {
       throw redirect({
-        to: '/slide/$slideId/$panel',
+        to: slidePanelRoute.to,
         params: { slideId: first, panel: 'main' },
       })
     }
@@ -34,7 +50,7 @@ const slideRedirectRoute = createRoute({
       redirectToFirstSlide()
     }
     throw redirect({
-      to: '/slide/$slideId/$panel',
+      to: slidePanelRoute.to,
       params: { slideId: params.slideId, panel: 'main' },
     })
   },
@@ -44,28 +60,12 @@ function redirectToFirstSlide(): never {
   const first = getFirstSlideId()
   if (first) {
     throw redirect({
-      to: '/slide/$slideId/$panel',
+      to: slidePanelRoute.to,
       params: { slideId: first, panel: 'main' },
     })
   }
   throw redirect({ to: '/' })
 }
-
-const slidePanelRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: '/slide/$slideId/$panel',
-  beforeLoad: ({ params }) => {
-    if (!getSlideById(params.slideId)) {
-      redirectToFirstSlide()
-    }
-    if (!isPanelId(params.panel) || !meta.panels[params.panel]) {
-      throw redirect({
-        to: '/slide/$slideId/$panel',
-        params: { slideId: params.slideId, panel: 'main' },
-      })
-    }
-  },
-})
 
 const routeTree = rootRoute.addChildren([
   indexRoute,

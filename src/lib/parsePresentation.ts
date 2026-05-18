@@ -1,7 +1,6 @@
 import { parse as parseYaml } from 'yaml'
 import {
   DEFAULT_PANELS,
-  LEGACY_SLIDE_HEADER_PATTERN,
   SLIDE_FIELD_HEADINGS,
   SLIDE_SECTION_DELIMITER,
   type SlideFieldHeading,
@@ -145,22 +144,6 @@ function splitFrontmatter(markdown: string): {
   return { data: {}, content }
 }
 
-function trimTrailingContent(body: string): string {
-  const commentIndex = body.indexOf('<!-- appendix -->')
-  if (commentIndex !== -1) return body.slice(0, commentIndex).trim()
-  return body.trim()
-}
-
-/** @deprecated legacy deck headings — ignored */
-function stripLegacyDeckHeadings(body: string): string {
-  return body
-    .replace(
-      /^### presentation(?:Title|Subtitle|Subtile)\s*\n[\s\S]*?(?=\n### |\n---|$)/gm,
-      '',
-    )
-    .trim()
-}
-
 function parseMeta(data: Record<string, unknown>): DeckMeta {
   const panelsRaw = data.panels
   if (panelsRaw && typeof panelsRaw === 'object' && !Array.isArray(panelsRaw)) {
@@ -180,10 +163,6 @@ function parseMeta(data: Record<string, unknown>): DeckMeta {
   }
 
   return { panels: { ...DEFAULT_PANELS } }
-}
-
-function normalizeSlideBlock(block: string): string {
-  return block.replace(LEGACY_SLIDE_HEADER_PATTERN, '').trim()
 }
 
 function isSlideBlock(block: string): boolean {
@@ -212,10 +191,10 @@ export function parsePresentation(markdown: string): ParsedPresentation {
   const { data, content: rawContent } = splitFrontmatter(markdown)
   const meta = parseMeta(data as Record<string, unknown>)
 
-  const content = stripLegacyDeckHeadings(trimTrailingContent(rawContent))
+  const content = rawContent.trim()
   const slideBlocks = content
     .split(SLIDE_SECTION_DELIMITER)
-    .map(normalizeSlideBlock)
+    .map((block) => block.trim())
     .filter(isSlideBlock)
 
   const slides: Slide[] = []

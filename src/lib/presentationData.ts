@@ -14,9 +14,7 @@ function loadPresentation() {
   }
 }
 
-export const presentation = loadPresentation()
-
-export const { slides, meta } = presentation
+export const { slides, meta } = loadPresentation()
 
 export function getSlideById(slideId: string) {
   return slides.find((s) => s.id === slideId)

@@ -4,7 +4,6 @@ import {
   getHorizontalIndex,
   getSlideById,
   getSlideIdFromHorizontal,
-  slides,
 } from './presentationData'
 import { getSlidePanels, panelIndex } from './slidePanels'
 
@@ -43,17 +42,6 @@ export function getRouteFromReveal(deck: DeckApi): {
   return { slideId, panel }
 }
 
-export function getAdjacentSlideId(
-  slideId: string,
-  direction: 'prev' | 'next',
-): string | undefined {
-  const index = slides.findIndex((s) => s.id === slideId)
-  if (index === -1) return undefined
-
-  const nextIndex = direction === 'next' ? index + 1 : index - 1
-  return slides[nextIndex]?.id
-}
-
 /** Keep panel when the target slide has it; otherwise fall back to main. */
 export function getPanelForSlide(
   slideId: string,
@@ -64,20 +52,4 @@ export function getPanelForSlide(
 
   const panels = getSlidePanels(slide)
   return panels.includes(preferredPanel) ? preferredPanel : 'main'
-}
-
-export function getAdjacentPanel(
-  slideId: string,
-  panel: PanelId,
-  direction: 'prev' | 'next',
-): PanelId | undefined {
-  const slide = getSlideById(slideId)
-  if (!slide) return undefined
-
-  const panels = getSlidePanels(slide)
-  const index = panels.indexOf(panel)
-  if (index === -1) return undefined
-
-  const nextIndex = direction === 'next' ? index + 1 : index - 1
-  return panels[nextIndex]
 }

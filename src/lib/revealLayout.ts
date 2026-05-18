@@ -37,7 +37,8 @@ export function getRevealOptions(size: RevealLayoutSize = getRevealLayoutSize())
   return {
     hash: false,
     history: false,
-    controls: false,
+    controls: true,
+    controlsLayout: 'bottom-right' as const,
     slideNumber: false,
     transition: 'slide' as const,
     backgroundTransition: 'fade' as const,

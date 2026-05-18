@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import type { DeckApi } from '../RevealContext'
 import { getFirstSlideId } from '../lib/presentationData'
+import { updateRevealControls } from '../lib/revealControls'
 import { getRevealIndices, getRouteFromReveal } from '../lib/revealRouterSync'
 import { useSlideRoute } from './useSlideRoute'
 
@@ -21,6 +22,7 @@ export function useRevealRouterSync(reveal: DeckApi | null) {
 
     syncingRef.current = true
     reveal.slide(h, v)
+    updateRevealControls(reveal)
     requestAnimationFrame(() => {
       syncingRef.current = false
     })
@@ -33,6 +35,7 @@ export function useRevealRouterSync(reveal: DeckApi | null) {
     const onSlideChanged = () => {
       if (syncingRef.current) return
 
+      updateRevealControls(reveal)
       const route = getRouteFromReveal(reveal)
 
       if (!route.slideId) {

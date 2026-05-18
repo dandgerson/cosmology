@@ -1,9 +1,6 @@
 /** Split between slide blocks in presentation.md */
 export const SLIDE_SECTION_DELIMITER = '\n---\n'
 
-/** Legacy `## slide/{id}` — stripped when parsing; ids come from slide order */
-export const LEGACY_SLIDE_HEADER_PATTERN = /^## slide\/\d+\s*$/gm
-
 /** `###` section headings the parser understands (language-neutral keys) */
 export const SLIDE_FIELD_HEADINGS = [
   'title',
