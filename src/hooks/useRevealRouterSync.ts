@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import type { DeckApi } from '../RevealContext'
+import { getFirstSlideId } from '../lib/presentationData'
 import { getRevealIndices, getRouteFromReveal } from '../lib/revealRouterSync'
 import { useSlideRoute } from './useSlideRoute'
 
@@ -35,7 +36,13 @@ export function useRevealRouterSync(reveal: DeckApi | null) {
       const route = getRouteFromReveal(reveal)
 
       if (!route.slideId) {
-        navigate({ to: '/' })
+        const first = getFirstSlideId()
+        if (first) {
+          navigate({
+            to: '/slide/$slideId/$panel',
+            params: { slideId: first, panel: 'main' },
+          })
+        }
         return
       }
 

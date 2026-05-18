@@ -49,6 +49,7 @@ export default function SlidePanelContent({ slide, panel }: SlidePanelContentPro
           <article className="slide-article panel-scroll">
             <Markdown>{slide.article}</Markdown>
           </article>
+          {images.length > 0 && <SlideImages images={images} />}
         </>
       )
 

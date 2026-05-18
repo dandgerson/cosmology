@@ -41,11 +41,9 @@ panels:
 
 ### Slides
 
-Separate slides with `---`. Each slide starts with a language-neutral header and `###` sections:
+Separate slides with `---`. Slide order in the file is the presentation order; URLs use auto-numbered ids (`1`, `2`, `3`, …). Rearrange blocks freely—no `## slide/{id}` headers needed.
 
 ```markdown
-## slide/2
-
 ### title
 *Slide title*
 
@@ -87,8 +85,8 @@ Theme switcher in the UI; choice is stored in `localStorage`.
 
 ## URLs
 
-- `/` — title slide  
-- `/slide/:slideId/main` — main panel (e.g. `/slide/2/main`)  
+- `/` — redirects to the first slide (`/slide/1/main`)  
+- `/slide/:slideId/main` — main panel (e.g. `/slide/2/main`); `slideId` is position in the file (1-based)  
 - `/slide/:slideId/details`, `/article`, `/sources` when those fields exist in markdown  
 
 Keyboard: **← →** change horizontal slides; **↑ ↓** move between vertical panels when a slide has extra content.

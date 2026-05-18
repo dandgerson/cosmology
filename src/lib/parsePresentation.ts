@@ -1,9 +1,8 @@
 import { parse as parseYaml } from 'yaml'
 import {
-  DEFAULT_DECK_TITLE,
   DEFAULT_PANELS,
+  LEGACY_SLIDE_HEADER_PATTERN,
   SLIDE_FIELD_HEADINGS,
-  SLIDE_HEADER_PATTERN,
   SLIDE_SECTION_DELIMITER,
   type SlideFieldHeading,
 } from './presentationConfig'
@@ -38,7 +37,6 @@ export type Slide = {
 }
 
 export type ParsedPresentation = {
-  title: string
   meta: DeckMeta
   slides: Slide[]
 }
@@ -88,19 +86,21 @@ function parseFieldContent(heading: SlideFieldHeading, raw: string): string {
   }
 }
 
-function extractSections(block: string): Map<SlideFieldHeading, string> {
-  const sections = new Map<SlideFieldHeading, string>()
+function extractSections<H extends string>(
+  block: string,
+  headings: readonly H[],
+): Map<H, string> {
+  const sections = new Map<H, string>()
   const headingPattern = new RegExp(
-    `^### (${SLIDE_FIELD_HEADINGS.join('|')})\\s*$`,
+    `^### (${headings.join('|')})\\s*$`,
     'gim',
   )
 
-  const matches: { heading: SlideFieldHeading; index: number; length: number }[] =
-    []
+  const matches: { heading: H; index: number; length: number }[] = []
   let match: RegExpExecArray | null
   while ((match = headingPattern.exec(block)) !== null) {
     matches.push({
-      heading: match[1].toLowerCase() as SlideFieldHeading,
+      heading: match[1] as H,
       index: match.index,
       length: match[0].length,
     })
@@ -151,6 +151,16 @@ function trimTrailingContent(body: string): string {
   return body.trim()
 }
 
+/** @deprecated legacy deck headings — ignored */
+function stripLegacyDeckHeadings(body: string): string {
+  return body
+    .replace(
+      /^### presentation(?:Title|Subtitle|Subtile)\s*\n[\s\S]*?(?=\n### |\n---|$)/gm,
+      '',
+    )
+    .trim()
+}
+
 function parseMeta(data: Record<string, unknown>): DeckMeta {
   const panelsRaw = data.panels
   if (panelsRaw && typeof panelsRaw === 'object' && !Array.isArray(panelsRaw)) {
@@ -172,6 +182,18 @@ function parseMeta(data: Record<string, unknown>): DeckMeta {
   return { panels: { ...DEFAULT_PANELS } }
 }
 
+function normalizeSlideBlock(block: string): string {
+  return block.replace(LEGACY_SLIDE_HEADER_PATTERN, '').trim()
+}
+
+function isSlideBlock(block: string): boolean {
+  const pattern = new RegExp(
+    `^### (${SLIDE_FIELD_HEADINGS.join('|')})\\s*$`,
+    'im',
+  )
+  return pattern.test(block)
+}
+
 function emptySlide(id: string): Slide {
   return {
     id,
@@ -190,26 +212,17 @@ export function parsePresentation(markdown: string): ParsedPresentation {
   const { data, content: rawContent } = splitFrontmatter(markdown)
   const meta = parseMeta(data as Record<string, unknown>)
 
-  const content = trimTrailingContent(rawContent)
-  const titleMatch = content.match(/^# (.+)$/m)
-  const title = titleMatch
-    ? stripMarkdownInline(titleMatch[1])
-    : DEFAULT_DECK_TITLE
-
-  const afterTitle = content.replace(/^# .+\n+/, '')
-  const slideBlocks = afterTitle
+  const content = stripLegacyDeckHeadings(trimTrailingContent(rawContent))
+  const slideBlocks = content
     .split(SLIDE_SECTION_DELIMITER)
-    .map((block) => block.trim())
-    .filter(Boolean)
+    .map(normalizeSlideBlock)
+    .filter(isSlideBlock)
 
   const slides: Slide[] = []
 
-  for (const block of slideBlocks) {
-    const header = block.match(SLIDE_HEADER_PATTERN)
-    if (!header) continue
-
-    const id = header[1].toLowerCase()
-    const sections = extractSections(block)
+  slideBlocks.forEach((block, index) => {
+    const id = String(index + 1)
+    const sections = extractSections(block, SLIDE_FIELD_HEADINGS)
     const slide = emptySlide(id)
 
     for (const [heading, raw] of sections) {
@@ -228,7 +241,7 @@ export function parsePresentation(markdown: string): ParsedPresentation {
     }
 
     slides.push(slide)
-  }
+  })
 
-  return { title, meta, slides }
+  return { meta, slides }
 }

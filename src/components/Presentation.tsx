@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import Reveal from 'reveal.js'
 import Notes from 'reveal.js/plugin/notes'
 import { RevealContext, type DeckApi } from '../RevealContext'
-import { deckTitle, slides } from '../lib/presentationData'
+import { slides } from '../lib/presentationData'
 import { getSlidePanels, type PanelId } from '../lib/slidePanels'
 import { useRevealRouterSync } from '../hooks/useRevealRouterSync'
 import { useSlideRoute } from '../hooks/useSlideRoute'
@@ -78,13 +78,6 @@ export default function Presentation() {
     <RevealContext.Provider value={reveal}>
       <div className="reveal" ref={deckRef}>
         <div className="slides">
-          <section className="title-slide">
-            <h1>{deckTitle}</h1>
-            <p className="deck-subtitle">
-              Космологические модели разных культур и традиций
-            </p>
-          </section>
-
           {slides.map((slide) => (
             <SlideStack
               key={slide.id}

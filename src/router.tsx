@@ -6,7 +6,7 @@ import {
 } from '@tanstack/react-router'
 import RootLayout from './routes/RootLayout'
 import { isPanelId } from './lib/slidePanels'
-import { getSlideById, meta } from './lib/presentationData'
+import { getFirstSlideId, getSlideById, meta } from './lib/presentationData'
 
 const rootRoute = createRootRoute({
   component: RootLayout,
@@ -15,6 +15,15 @@ const rootRoute = createRootRoute({
 const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/',
+  beforeLoad: () => {
+    const first = getFirstSlideId()
+    if (first) {
+      throw redirect({
+        to: '/slide/$slideId/$panel',
+        params: { slideId: first, panel: 'main' },
+      })
+    }
+  },
 })
 
 const slideRedirectRoute = createRoute({
@@ -22,7 +31,7 @@ const slideRedirectRoute = createRoute({
   path: '/slide/$slideId',
   beforeLoad: ({ params }) => {
     if (!getSlideById(params.slideId)) {
-      throw redirect({ to: '/' })
+      redirectToFirstSlide()
     }
     throw redirect({
       to: '/slide/$slideId/$panel',
@@ -31,12 +40,23 @@ const slideRedirectRoute = createRoute({
   },
 })
 
+function redirectToFirstSlide(): never {
+  const first = getFirstSlideId()
+  if (first) {
+    throw redirect({
+      to: '/slide/$slideId/$panel',
+      params: { slideId: first, panel: 'main' },
+    })
+  }
+  throw redirect({ to: '/' })
+}
+
 const slidePanelRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/slide/$slideId/$panel',
   beforeLoad: ({ params }) => {
     if (!getSlideById(params.slideId)) {
-      throw redirect({ to: '/' })
+      redirectToFirstSlide()
     }
     if (!isPanelId(params.panel) || !meta.panels[params.panel]) {
       throw redirect({

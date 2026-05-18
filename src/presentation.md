@@ -7,16 +7,13 @@ panels:
     showImages: true
   article:
     label: Статья
+    showImages: true
   sources:
     label: Источники
 ---
 
-# ПРЕЗЕНТАЦИЯ: КОСМОЛОГИЧЕСКИЕ МОДЕЛИ РАЗНЫХ КУЛЬТУР И ТРАДИЦИЙ
-
-## slide/1
-
 ### title
-*Что такое космологическая модель?*
+*Космологические модели разных культур*
 ### body
 > Космологическая модель — это ответ на вопрос «как устроено пространство мира». Она описывает форму Земли и неба, уровни мироздания, ось мира, границы и движение светил. В этой презентации представлены разные модели без оценки их «правильности».
 ### notes
@@ -25,8 +22,6 @@ panels:
 cosmology models comparison collage
 
 ---
-
-## slide/2
 
 ### title
 *Месопотамия: плоский диск под твёрдым куполом*
@@ -53,8 +48,6 @@ Babylonian world map circular cuneiform
 
 ---
 
-## slide/3
-
 ### title
 *Древний Египет: Геб и Нут*
 ### body
@@ -63,12 +56,25 @@ Babylonian world map circular cuneiform
 *Изображение Нут, усыпанной звёздами, и Геба под ней — один из самых узнаваемых образов египетской космологии.*
 ### search
 Nut sky goddess Geb earth papyrus
+### article
+
+#### Геб — бог земли.
+
+- Роль: Олицетворение земной тверди, гор и долин. Считался добрым богом, который дарует урожай и защищает от змей.
+- Иконография: Изображался в виде мужчины, лежащего на земле, иногда с гусем на голове (символ имени).
+- Связь с загробным миром: Поскольку умерших хоронили в земле, Геб был одним из судей загробного мира.
+  
+#### Нут — богиня неба
+
+- Роль: Олицетворение ночного и дневного небосвода. По поверьям, она каждый вечер проглатывала солнце, а утром рождала его заново, что объясняло смену дня и ночи.
+- Иконография: Изображалась в виде обнаженной женщины, усыпанной звездами, которая выгибалась над землей, опираясь руками и ногами на горизонт и накрывая мир, словно защитный купол. Миф о разделении
+
+Согласно мифу, Геб и Нут были так сильно влюблены друг в друга и так тесно сплелись, что между землей и небом не было пространства для жизни и солнечного света. Их отец, бог воздуха Шу, по приказу верховного бога Ра насильно разделил их, подняв Нут вверх, а Геба оставив внизу
+
 ### images
 ![](img/3/1.jpg)
 
 ---
-
-## slide/4
 
 ### title
 *Китай: круглое небо и квадратная земля*
@@ -88,8 +94,6 @@ Chinese gai tian cosmology diagram
 
 ---
 
-## slide/5
-
 ### title
 *Греция: сферическая Земля в центре Вселенной*
 ### body
@@ -108,7 +112,6 @@ Ptolemaic geocentric model spheres
 
 ---
 
-## slide/6
 ### title
 *Древняя Греция: мир богов, титанов и героев*
 ### body
@@ -123,7 +126,6 @@ Greek mythology cosmos Gaia Uranus Tartarus Olympus diagram
 
 ---
 
-## slide/7
 ### title
 *Данте Алигьери: синтез средневековой космологии*
 ### body
@@ -137,7 +139,6 @@ Dante Divine Comedy cosmology diagram concentric spheres
 
 ---
 
-## slide/8
 ### title
 *Скандинавия: мировое дерево Иггдрасиль*
 ### body
@@ -152,7 +153,6 @@ Yggdrasil nine worlds Norse cosmology
 
 ---
 
-## slide/9
 ### title
 *Шаманские космологии: три мира и ось*
 ### body
@@ -164,7 +164,6 @@ shamanic three worlds drum cosmology
 
 ---
 
-## slide/10
 ### title
 *Ацтеки: квадратная земля и многослойное небо*
 ### body
@@ -176,7 +175,6 @@ Aztec cosmology 13 heavens 9 underworlds
 
 ---
 
-## slide/11
 ### title
 *Австралийские аборигены: пространство сновидений*
 ### body
@@ -188,7 +186,6 @@ Aboriginal songlines star dreaming painting
 
 ---
 
-## slide/12
 ### title
 *Исламская космология: небесные сферы и ангелы*
 ### body
@@ -200,7 +197,6 @@ Islamic medieval cosmology spheres angels Qazwini
 
 ---
 
-## slide/13
 ### title
 *Христианская космология: от шатра до сфер*
 ### body
@@ -212,7 +208,6 @@ Cosmas Indicopleustes Christian topography
 
 ---
 
-## slide/14
 ### title
 *Масонская космология: Вселенная как Храм*
 ### body
@@ -236,7 +231,6 @@ Masonic square and compass cosmos lodge ceiling stars
 
 ---
 
-## slide/15
 ### title
 *Алхимия: Чёрное Солнце (Sol Niger)*
 ### body
@@ -248,7 +242,6 @@ alchemical nigredo black sun Splendor Solis
 
 ---
 
-## slide/16
 ### title
 *Чёрное Солнце как источник энергии внутри Земли*
 ### body
@@ -260,7 +253,6 @@ Black Sun Vril Bulwer-Lytton coming race interior earth
 
 ---
 
-## slide/17
 ### title
 *Даосизм: Тёмный Ковш и Чёрное Солнце*
 ### body
@@ -272,7 +264,6 @@ Taoism dark dipper purple dipper Big Dipper meditation
 
 ---
 
-## slide/18
 ### title
 *Ведическая космология: гора Меру и концентрические миры*
 ### body
@@ -284,7 +275,6 @@ Mount Meru Vedic cosmology Jambudvipa concentric oceans
 
 ---
 
-## slide/19
 ### title
 *Полая Земля и Вогнутая Земля: две модели полой сферы*
 ### body
@@ -298,7 +288,6 @@ Hollow Earth cross section Symmes hole` и `Concave Earth Koresh diagram
 
 ---
 
-## slide/20
 ### title
 *Сотовая Земля (Cellular Earth): множество миров-ячеек*
 ### body
@@ -310,7 +299,6 @@ cellular earth honeycomb worlds diagram
 
 ---
 
-## slide/21
 ### title
 *Terra Infinita (Бесконечная Земля)*
 ### body
@@ -322,7 +310,6 @@ Terra Infinita map infinite flat earth cells
 
 ---
 
-## slide/22
 ### title
 *Современная плоская Земля: геоцентрическая модель*
 ### body
@@ -334,7 +321,6 @@ modern flat earth azimuthal map sun path
 
 ---
 
-## slide/23
 ### title
 *Конец*
 ### body

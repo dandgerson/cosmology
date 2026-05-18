@@ -1,8 +1,8 @@
 /** Split between slide blocks in presentation.md */
 export const SLIDE_SECTION_DELIMITER = '\n---\n'
 
-/** `## slide/{id}` — group 1 = numeric slide id */
-export const SLIDE_HEADER_PATTERN = /^## slide\/(\d+)\s*$/m
+/** Legacy `## slide/{id}` — stripped when parsing; ids come from slide order */
+export const LEGACY_SLIDE_HEADER_PATTERN = /^## slide\/\d+\s*$/gm
 
 /** `###` section headings the parser understands (language-neutral keys) */
 export const SLIDE_FIELD_HEADINGS = [
@@ -17,8 +17,6 @@ export const SLIDE_FIELD_HEADINGS = [
 ] as const
 
 export type SlideFieldHeading = (typeof SLIDE_FIELD_HEADINGS)[number]
-
-export const DEFAULT_DECK_TITLE = 'Презентация'
 
 export const DEFAULT_PANELS: Record<
   string,
