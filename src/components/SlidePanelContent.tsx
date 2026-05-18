@@ -5,13 +5,8 @@ import {
   shouldShowImages,
   type PanelId,
 } from '../lib/slidePanels'
+import PanelMain from './PanelMain'
 import SlideImages from './SlideImages'
-
-function formatBody(text: string) {
-  return text.split(/\n\n+/).map((paragraph, i) => (
-    <p key={i}>{paragraph}</p>
-  ))
-}
 
 type SlidePanelContentProps = {
   slide: Slide
@@ -20,51 +15,39 @@ type SlidePanelContentProps = {
 
 export default function SlidePanelContent({ slide, panel }: SlidePanelContentProps) {
   const images = shouldShowImages(panel) ? slide.images : []
+  const showLabel = panel !== 'main'
 
-  switch (panel) {
-    case 'main':
-      return (
-        <>
-          <h2>{slide.title}</h2>
-          <div className="slide-body">{formatBody(slide.body)}</div>
+  const body = (() => {
+    switch (panel) {
+      case 'main':
+        return slide.body
+      case 'details':
+        return slide.details
+      case 'article':
+        return slide.article
+      case 'sources':
+        return slide.sources
+      default:
+        return ''
+    }
+  })()
+
+  const hasScrollable = body.trim().length > 0 || images.length > 0
+
+  return (
+    <div className="slide-body">
+      <h2 className="slide-title">{slide.title}</h2>
+      {showLabel && <p className="slide-label">{getPanelLabel(panel)}</p>}
+      {hasScrollable && (
+        <PanelMain>
+          {body.trim() && (
+            <div className="slide-prose">
+              <Markdown>{body}</Markdown>
+            </div>
+          )}
           {images.length > 0 && <SlideImages images={images} />}
-        </>
-      )
-
-    case 'details':
-      return (
-        <>
-          <h2>{slide.title}</h2>
-          <p className="panel-label">{getPanelLabel('details')}</p>
-          <div className="slide-body panel-scroll">{formatBody(slide.details)}</div>
-          {images.length > 0 && <SlideImages images={images} />}
-        </>
-      )
-
-    case 'article':
-      return (
-        <>
-          <h2>{slide.title}</h2>
-          <p className="panel-label">{getPanelLabel('article')}</p>
-          <article className="slide-article panel-scroll">
-            <Markdown>{slide.article}</Markdown>
-          </article>
-          {images.length > 0 && <SlideImages images={images} />}
-        </>
-      )
-
-    case 'sources':
-      return (
-        <>
-          <h2>{slide.title}</h2>
-          <p className="panel-label">{getPanelLabel('sources')}</p>
-          <div className="slide-sources panel-scroll">
-            <Markdown>{slide.sources}</Markdown>
-          </div>
-        </>
-      )
-
-    default:
-      return null
-  }
+        </PanelMain>
+      )}
+    </div>
+  )
 }

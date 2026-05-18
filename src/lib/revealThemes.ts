@@ -12,6 +12,7 @@ import sky from 'reveal.js/theme/sky.css?url'
 import solarized from 'reveal.js/theme/solarized.css?url'
 import white from 'reveal.js/theme/white.css?url'
 import whiteContrast from 'reveal.js/theme/white-contrast.css?url'
+import deckOverrides from '../reveal-deck-overrides.css?url'
 
 export const REVEAL_THEME_STORAGE_KEY = 'cosmology-reveal-theme'
 
@@ -68,6 +69,7 @@ export function isLightRevealTheme(theme: RevealThemeId): boolean {
 }
 
 const THEME_LINK_ID = 'reveal-theme-link'
+const OVERRIDE_LINK_ID = 'reveal-deck-overrides-link'
 
 function getThemeLink(): HTMLLinkElement {
   let link = document.getElementById(THEME_LINK_ID) as HTMLLinkElement | null
@@ -78,6 +80,20 @@ function getThemeLink(): HTMLLinkElement {
     document.head.appendChild(link)
   }
   return link
+}
+
+/** Deck UI overrides — always after theme so they beat .reveal img rules */
+function moveDeckOverridesLast(): void {
+  let link = document.getElementById(OVERRIDE_LINK_ID) as HTMLLinkElement | null
+  if (!link) {
+    link = document.createElement('link')
+    link.id = OVERRIDE_LINK_ID
+    link.rel = 'stylesheet'
+    link.href = deckOverrides
+    document.head.appendChild(link)
+    return
+  }
+  document.head.appendChild(link)
 }
 
 export function isRevealThemeId(value: string): value is RevealThemeId {
@@ -93,8 +109,9 @@ export function getStoredRevealTheme(): RevealThemeId {
 export function setRevealTheme(theme: RevealThemeId): void {
   const link = getThemeLink()
   link.href = THEME_URLS[theme]
-  // Keep theme stylesheet last so its :root variables win
+  // Theme last among Reveal sheets; deck overrides follow to fix thumbnails etc.
   document.head.appendChild(link)
+  moveDeckOverridesLast()
   document.documentElement.dataset.revealTheme = theme
   localStorage.setItem(REVEAL_THEME_STORAGE_KEY, theme)
 }

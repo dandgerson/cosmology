@@ -17,13 +17,13 @@ export default function SlidePanelNav({ slide, activePanel }: SlidePanelNavProps
   if (panels.length <= 1) return null
 
   return (
-    <nav className="slide-panel-nav" aria-label="Разделы слайда">
+    <nav className="slide-tabs" aria-label="Разделы слайда">
       {panels.map((panel) => (
         <Link
           key={panel}
           to="/slide/$slideId/$panel"
           params={{ slideId: slide.id, panel }}
-          className={panel === activePanel ? 'active' : undefined}
+          className={`slide-tab btn-focus${panel === activePanel ? ' is-active' : ''}`}
           onClick={(e) => e.stopPropagation()}
         >
           {getPanelLabel(panel)}

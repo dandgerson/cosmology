@@ -18,7 +18,7 @@ export function getRevealLayoutSize(
   vh = window.innerHeight,
 ): RevealLayoutSize {
   if (!isMobileViewport(vw)) {
-    return { width: 1920, height: 1080, margin: 0.06, isMobile: false }
+    return { width: 1920, height: 1080, margin: 0.04, isMobile: false }
   }
 
   const aspect = vw / Math.max(vh, 1)

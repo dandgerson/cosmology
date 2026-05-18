@@ -9,25 +9,23 @@ export default function DeckNavigation() {
 
   if (slides.length === 0) return null
 
-  const currentIndex = slideId
-    ? slides.findIndex((s) => s.id === slideId)
-    : 0
-  const slideIndex = currentIndex === -1 ? 0 : currentIndex
+  const slideIndex = Math.max(
+    0,
+    slideId ? slides.findIndex((s) => s.id === slideId) : 0,
+  )
   const displaySlideId = slideId ?? slides[0]?.id ?? '1'
 
   return (
     <>
       <button
         type="button"
-        className="deck-chrome-counter"
+        className="btn-focus fixed right-3 bottom-2 z-[41] min-h-8 rounded bg-black/75 px-2 py-1 text-xs text-white tabular-nums hover:bg-black/90 mobile-deck:right-[max(0.75rem,env(safe-area-inset-right))] mobile-deck:bottom-[max(0.35rem,env(safe-area-inset-bottom))]"
         aria-label="Открыть список слайдов"
         aria-haspopup="listbox"
         aria-expanded={pickerOpen}
         onClick={() => setPickerOpen(true)}
       >
-        <span className="deck-chrome-counter-current">{slideIndex + 1}</span>
-        <span className="deck-chrome-counter-sep">/</span>
-        <span className="deck-chrome-counter-total">{slides.length}</span>
+        {slideIndex + 1} / {slides.length}
       </button>
 
       {pickerOpen && (

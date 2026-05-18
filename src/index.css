@@ -1,27 +1,284 @@
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
+
+@custom-variant mobile-deck (&:where(html[data-mobile-deck='true'] *));
+
+@theme {
+  --font-sans: 'Segoe UI', system-ui, sans-serif;
+  --spacing-deck-chrome: 7.5rem;
+
+  --color-switcher-bg: rgb(20 20 20 / 0.88);
+  --color-switcher-fg: #e6edf3;
+  --color-switcher-border: rgb(255 255 255 / 0.2);
+  --color-switcher-hover: rgb(40 40 40 / 0.95);
+  --color-switcher-menu: rgb(20 20 20 / 0.95);
+  --color-switcher-menu-hover: rgb(255 255 255 / 0.1);
+  --color-switcher-active: rgb(88 166 255 / 0.2);
+  --color-switcher-active-fg: #79c0ff;
+
+  --animate-lightbox-in: lightbox-fade-in 0.2s ease;
 }
 
-html {
-  -webkit-text-size-adjust: 100%;
-  text-size-adjust: 100%;
+@keyframes lightbox-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
-html,
-body,
-#root {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  height: 100dvh;
-  overflow: hidden;
-  touch-action: manipulation;
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  html,
+  body,
+  #root {
+    @apply m-0 h-full w-full overflow-hidden p-0 font-sans;
+    height: 100dvh;
+    touch-action: manipulation;
+  }
+
+  body {
+    padding: env(safe-area-inset-top) env(safe-area-inset-right)
+      env(safe-area-inset-bottom) env(safe-area-inset-left);
+  }
+
+  body.lightbox-open,
+  body.slide-picker-open {
+    @apply overflow-hidden;
+  }
+
+  html[data-reveal-theme='white'],
+  html[data-reveal-theme='white-contrast'],
+  html[data-reveal-theme='beige'],
+  html[data-reveal-theme='sky'],
+  html[data-reveal-theme='serif'],
+  html[data-reveal-theme='simple'],
+  html[data-reveal-theme='solarized'] {
+    --color-switcher-bg: rgb(255 255 255 / 0.92);
+    --color-switcher-fg: #222;
+    --color-switcher-border: rgb(0 0 0 / 0.15);
+    --color-switcher-hover: rgb(245 245 245 / 0.98);
+    --color-switcher-menu: rgb(255 255 255 / 0.98);
+    --color-switcher-menu-hover: rgb(0 0 0 / 0.06);
+    --color-switcher-active: rgb(42 118 221 / 0.15);
+    --color-switcher-active-fg: #1a5fb4;
+  }
+
+  /* Reveal.js — DOM we do not control */
+  .reveal .slides,
+  .reveal .slides > section,
+  .reveal .slides > section > section {
+    text-align: left;
+  }
+
+  .reveal,
+  .reveal .slides {
+    height: 100%;
+    overflow: hidden !important;
+  }
+
+  .reveal .slides > section {
+    height: 100% !important;
+    max-height: 100% !important;
+    overflow: hidden !important;
+  }
+
+  .reveal .slides > section > section {
+    height: 100% !important;
+    max-height: 100% !important;
+    overflow: hidden !important;
+    top: 0 !important;
+  }
+
+  .reveal .slides > section > section.slide-shell.present {
+    position: relative !important;
+    display: flex !important;
+    flex-direction: column;
+    justify-content: safe center;
+    align-items: stretch;
+  }
+
+  .reveal .slides > section > section.present:not(.slide-shell) {
+    position: relative !important;
+    display: block !important;
+  }
+
+  .reveal .slide-number {
+    display: none !important;
+  }
+
+  .reveal .controls {
+    display: block !important;
+    position: fixed !important;
+    top: auto !important;
+    left: auto !important;
+    right: max(0.75rem, env(safe-area-inset-right)) !important;
+    bottom: max(1.75rem, calc(0.5rem + env(safe-area-inset-bottom))) !important;
+    z-index: 40;
+    color: var(--r-link-color, #e94560);
+    pointer-events: none;
+  }
+
+  .reveal .controls button {
+    pointer-events: auto;
+  }
 }
 
-body {
-  padding: env(safe-area-inset-top) env(safe-area-inset-right)
-    env(safe-area-inset-bottom) env(safe-area-inset-left);
+@layer components {
+  /* Slide layout: nav + body centered together; scroll max-height from PanelMain */
+  .slide-shell {
+    display: flex;
+    flex-direction: column;
+    justify-content: safe center;
+    align-items: stretch;
+    height: 100%;
+    max-height: 100%;
+    overflow: hidden;
+    padding: 0.5rem 0.75rem 0.75rem;
+    text-align: left;
+    color: var(--r-main-color);
+  }
+
+  .slide-center {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-height: 0;
+    max-height: 100%;
+    flex: 0 1 auto;
+    overflow: hidden;
+  }
+
+  .slide-scroll {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-height: 0;
+    flex: 0 1 auto;
+    align-self: stretch;
+    justify-content: flex-start;
+    /* fallback until PanelMain measures from viewport */
+    max-height: calc(100dvh - 12rem);
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    touch-action: pan-y;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in srgb, var(--r-main-color) 35%, transparent)
+      transparent;
+  }
+
+  .slide-scroll::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .slide-scroll::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background: color-mix(in srgb, var(--r-main-color) 40%, transparent);
+  }
+
+  .slide-body {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    flex: 0 1 auto;
+    width: 100%;
+    overflow: hidden;
+    text-align: left;
+    justify-content: flex-start;
+  }
+
+  .slide-title,
+  .slide-label {
+    flex-shrink: 0;
+  }
+
+  .slide-title {
+    @apply mb-1.5 text-left text-[1.05em] font-normal normal-case;
+    color: var(--r-heading-color);
+  }
+
+  .slide-label {
+    @apply mb-1.5 text-left text-[0.45em] uppercase tracking-wide opacity-65;
+    color: var(--r-heading-color);
+  }
+
+  .slide-prose {
+    @apply prose prose-sm max-w-none text-left;
+    color: var(--r-main-color);
+    font-size: 0.58em;
+  }
+
+  .slide-prose :where(h2, h3) {
+    color: var(--r-heading-color);
+    font-weight: normal;
+  }
+
+  .slide-prose :where(a) {
+    color: var(--r-link-color);
+    text-decoration: none;
+  }
+
+  .slide-prose :where(pre) {
+    @apply overflow-x-auto rounded px-4 py-3;
+    background: color-mix(in srgb, var(--r-main-color) 8%, transparent);
+  }
+
+  .slide-prose :where(pre code) {
+    @apply font-mono whitespace-pre;
+  }
+
+  .slide-tabs {
+    @apply mb-2 flex shrink-0 flex-wrap gap-1.5 text-[0.4em];
+  }
+
+  .slide-tab {
+    @apply inline-flex min-h-11 items-center rounded border px-3 py-1.5 no-underline opacity-75;
+    border-color: color-mix(in srgb, var(--r-main-color) 25%, transparent);
+    color: var(--r-main-color);
+  }
+
+  .slide-tab:hover {
+    @apply opacity-100;
+    background: color-mix(in srgb, var(--r-main-color) 8%, transparent);
+  }
+
+  .slide-tab.is-active {
+    @apply border-[color:var(--r-link-color)] font-semibold opacity-100;
+    color: var(--r-link-color);
+    background: color-mix(in srgb, var(--r-link-color) 12%, transparent);
+  }
+
+  .slide-thumbs {
+    @apply mt-3 flex flex-wrap justify-center gap-2;
+  }
+
+  .slide-thumb {
+    @apply h-24 w-32 shrink-0 cursor-zoom-in overflow-hidden rounded border-0 p-0;
+    background: color-mix(in srgb, var(--r-main-color) 12%, transparent);
+  }
+
+  .slide-thumbs--single .slide-thumb {
+    @apply h-44 w-full max-w-md;
+  }
+
+  .slide-thumbs--few .slide-thumb {
+    @apply h-28 w-40 md:h-36 md:w-52;
+  }
+
+  .btn-focus:focus-visible {
+    @apply outline-2 outline-offset-2 outline-sky-400;
+  }
 }

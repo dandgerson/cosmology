@@ -48,19 +48,8 @@ function stripMarkdownInline(text: string): string {
     .trim()
 }
 
-function parseBlockquote(block: string): string {
-  return block
-    .split('\n')
-    .map((line) => line.replace(/^>\s?/, ''))
-    .join('\n')
-    .trim()
-}
-
 function parseMultilineField(block: string): string {
-  const trimmed = block.trim()
-  if (!trimmed) return ''
-  if (trimmed.startsWith('>')) return parseBlockquote(trimmed)
-  return trimmed
+  return block.trim()
 }
 
 function parseNotesField(block: string): string {

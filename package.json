@@ -13,11 +13,16 @@
     "deploy:login": "vercel login"
   },
   "dependencies": {
+    "@tailwindcss/typography": "^0.5.19",
+    "@tailwindcss/vite": "^4.3.0",
     "@tanstack/react-router": "^1.170.0",
+    "clsx": "^2.1.1",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
     "react-markdown": "^10.1.0",
     "reveal.js": "^6.0.1",
+    "tailwind-merge": "^3.6.0",
+    "tailwindcss": "^4.3.0",
     "yaml": "^2.9.0"
   },
   "devDependencies": {

@@ -19,14 +19,20 @@ export default function SlideImageButton({
   return (
     <button
       type="button"
-      className="slide-image-btn"
+      className="slide-thumb btn-focus"
       data-prevent-swipe
       aria-label={
         image.alt || `Увеличить изображение ${index + 1} из ${total}`
       }
       {...tap}
     >
-      <img src={image.src} alt={image.alt} loading="lazy" draggable={false} />
+      <img
+        src={image.src}
+        alt={image.alt}
+        loading="lazy"
+        draggable={false}
+        className="size-full object-cover"
+      />
     </button>
   )
 }

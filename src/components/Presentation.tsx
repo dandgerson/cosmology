@@ -13,7 +13,6 @@ import DeckNavigation from './DeckNavigation'
 import SlidePanelContent from './SlidePanelContent'
 import SlidePanelNav from './SlidePanelNav'
 import 'reveal.js/reveal.css'
-import '../presentation.css'
 
 function SlideStack({
   slide,
@@ -27,9 +26,11 @@ function SlideStack({
   return (
     <section>
       {panels.map((panel) => (
-        <section key={panel} data-panel={panel}>
-          <SlidePanelNav slide={slide} activePanel={activePanel} />
-          <SlidePanelContent slide={slide} panel={panel} />
+        <section key={panel} data-panel={panel} className="slide-shell">
+          <div className="slide-center">
+            <SlidePanelNav slide={slide} activePanel={activePanel} />
+            <SlidePanelContent slide={slide} panel={panel} />
+          </div>
           {slide.notes && panel === 'main' && (
             <aside className="notes">
               {slide.notes}
@@ -85,8 +86,8 @@ export default function Presentation() {
 
   return (
     <RevealContext.Provider value={reveal}>
-      <div className="reveal" ref={deckRef}>
-        <div className="slides">
+      <div className="reveal size-full font-sans" ref={deckRef}>
+        <div className="slides text-left">
           {slides.map((slide) => (
             <SlideStack
               key={slide.id}

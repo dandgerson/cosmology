@@ -12,12 +12,15 @@ export default function SlideImages({ images }: SlideImagesProps) {
 
   if (images.length === 0) return null
 
-  const sizeClass =
+  const layout =
     images.length === 1 ? 'single' : images.length <= 3 ? 'few' : 'many'
 
   return (
     <>
-      <div className={`slide-images ${sizeClass}`} data-prevent-swipe>
+      <div
+        className={`slide-thumbs${layout === 'single' ? ' slide-thumbs--single' : layout === 'few' ? ' slide-thumbs--few' : ''}`}
+        data-prevent-swipe
+      >
         {images.map((image, i) => (
           <SlideImageButton
             key={image.path}
