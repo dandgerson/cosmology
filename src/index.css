@@ -221,6 +221,14 @@
     font-size: 0.58em;
   }
 
+  .slide-notes {
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid color-mix(in srgb, var(--r-main-color) 20%, transparent);
+    font-size: 0.52em;
+    opacity: 0.9;
+  }
+
   .slide-prose :where(h2, h3) {
     color: var(--r-heading-color);
     font-weight: normal;

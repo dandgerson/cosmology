@@ -2,6 +2,7 @@ import Markdown from 'react-markdown'
 import type { Slide } from '../lib/parsePresentation'
 import {
   getPanelLabel,
+  panelShowsNotes,
   shouldShowImages,
   type PanelId,
 } from '../lib/slidePanels'
@@ -32,7 +33,8 @@ export default function SlidePanelContent({ slide, panel }: SlidePanelContentPro
     }
   })()
 
-  const hasScrollable = body.trim().length > 0 || images.length > 0
+  const showNotes = panel === 'main' && panelShowsNotes('main') && slide.notes.trim().length > 0
+  const hasScrollable = body.trim().length > 0 || images.length > 0 || showNotes
 
   return (
     <div className="slide-body">
@@ -43,6 +45,11 @@ export default function SlidePanelContent({ slide, panel }: SlidePanelContentPro
           {body.trim() && (
             <div className="slide-prose">
               <Markdown>{body}</Markdown>
+            </div>
+          )}
+          {showNotes && (
+            <div className="slide-notes slide-prose">
+              <Markdown>{slide.notes}</Markdown>
             </div>
           )}
           {images.length > 0 && <SlideImages images={images} />}

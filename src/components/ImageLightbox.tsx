@@ -11,7 +11,7 @@ type ImageLightboxProps = {
 }
 
 const navBtn =
-  'btn-focus z-[2] flex size-11 shrink-0 items-center justify-center rounded-full bg-white/15 text-2xl text-white hover:bg-white/25 disabled:opacity-25'
+  'image-lightbox__btn btn-focus z-[2] flex size-11 shrink-0 items-center justify-center rounded-full text-2xl'
 
 export default function ImageLightbox({
   images,
@@ -68,7 +68,7 @@ export default function ImageLightbox({
 
   return createPortal(
     <div
-      className="fixed inset-0 z-[10000] animate-lightbox-in bg-black/90"
+      className="image-lightbox fixed inset-0 z-[10000] animate-lightbox-in"
       role="dialog"
       aria-modal="true"
       aria-label={current.alt || `Изображение ${index + 1} из ${images.length}`}
@@ -119,7 +119,7 @@ export default function ImageLightbox({
             />
           </div>
           {(showNav || current.description) && (
-            <figcaption className="mt-2 shrink-0 text-center text-sm text-white/80">
+            <figcaption className="image-lightbox__caption mt-2 shrink-0 text-center text-sm">
               {showNav && (
                 <span className="block">
                   {index + 1} / {images.length}

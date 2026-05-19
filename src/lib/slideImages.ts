@@ -1,5 +1,5 @@
 // Vite requires a string literal here (not imported from config).
-const imageModules = import.meta.glob('../img/**/*.{jpg,jpeg,png,gif,webp}', {
+const imageModules = import.meta.glob('../img/**/*.{jpg,jpeg,png,gif,webp,svg}', {
   eager: true,
   import: 'default',
 }) as Record<string, string>

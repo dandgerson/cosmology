@@ -17,7 +17,7 @@ export type SlideFieldHeading = (typeof SLIDE_FIELD_HEADINGS)[number]
 
 export const DEFAULT_PANELS: Record<
   string,
-  { label: string; showImages?: boolean }
+  { label: string; showImages?: boolean; showNotes?: boolean }
 > = {
   main: { label: 'Слайд' },
   details: { label: 'Детали', showImages: true },

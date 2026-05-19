@@ -23,6 +23,10 @@ export function panelShowsImages(panelId: string): boolean {
   return meta.panels[panelId]?.showImages === true
 }
 
+export function panelShowsNotes(panelId: string): boolean {
+  return meta.panels[panelId]?.showNotes === true
+}
+
 export function getSlidePanels(slide: Slide): PanelId[] {
   const panels: PanelId[] = ['main']
   for (const id of Object.keys(meta.panels)) {

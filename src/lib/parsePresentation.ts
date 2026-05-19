@@ -17,6 +17,7 @@ export type SlideImage = {
 export type PanelConfig = {
   label: string
   showImages?: boolean
+  showNotes?: boolean
 }
 
 export type DeckMeta = {
@@ -139,10 +140,15 @@ function parseMeta(data: Record<string, unknown>): DeckMeta {
     const panels: Record<string, PanelConfig> = {}
     for (const [id, value] of Object.entries(panelsRaw)) {
       if (value && typeof value === 'object' && 'label' in value) {
-        const entry = value as { label?: string; showImages?: boolean }
+        const entry = value as {
+          label?: string
+          showImages?: boolean
+          showNotes?: boolean
+        }
         panels[id] = {
           label: String(entry.label ?? id),
           showImages: entry.showImages === true,
+          showNotes: entry.showNotes === true,
         }
       }
     }

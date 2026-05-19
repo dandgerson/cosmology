@@ -10,6 +10,29 @@
   align-items: stretch;
 }
 
+/* Fullscreen gallery — uses active Reveal theme (:root vars) for transparent SVGs */
+.image-lightbox {
+  background-color: var(--r-background-color, #111);
+  color: var(--r-main-color, #eee);
+}
+
+.image-lightbox__btn {
+  color: var(--r-main-color, #eee);
+  background: color-mix(in srgb, var(--r-main-color) 14%, transparent);
+}
+
+.image-lightbox__btn:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--r-main-color) 24%, transparent);
+}
+
+.image-lightbox__btn:disabled {
+  opacity: 0.25;
+}
+
+.image-lightbox__caption {
+  color: color-mix(in srgb, var(--r-main-color) 75%, transparent);
+}
+
 .reveal .slide-thumbs img,
 .reveal button.slide-thumb > img {
   display: block;
