@@ -114,6 +114,7 @@ export function useRevealDeckSync(
           height: size.height,
           margin: size.margin,
           center: !size.isMobile,
+          scrollActivationWidth: 0,
         })
         lastSizeKeyRef.current = sizeKey
       }

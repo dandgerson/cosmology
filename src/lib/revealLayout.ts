@@ -61,5 +61,8 @@ export function getRevealOptions(size: RevealLayoutSize = getRevealLayoutSize())
     maxScale: 2,
     touch: true,
     center: !size.isMobile,
+    // Reveal 6 enables scroll view at <=435px; portrait phones would switch
+    // modes on rotation while indices/URL stay put — keep slide + swipe layout.
+    scrollActivationWidth: 0,
   }
 }
