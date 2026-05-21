@@ -31,6 +31,21 @@
 
 .image-lightbox__caption {
   color: color-mix(in srgb, var(--r-main-color) 75%, transparent);
+  max-width: 100%;
+}
+
+.image-lightbox__caption-text {
+  max-height: 3rem;
+  max-height: 3lh;
+  margin: 0.25rem 0 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--r-main-color) 35%, transparent)
+    transparent;
 }
 
 .reveal .slide-thumbs img,
@@ -44,4 +59,5 @@
   border: 0;
   box-shadow: none;
   vertical-align: top;
+  pointer-events: none;
 }

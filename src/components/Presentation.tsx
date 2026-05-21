@@ -2,12 +2,11 @@ import { useEffect, useRef, useState } from 'react'
 import Reveal from 'reveal.js'
 import Notes from 'reveal.js/plugin/notes'
 import { RevealContext, type DeckApi } from '../RevealContext'
-import { useRevealLayout } from '../hooks/useRevealLayout'
+import { useRevealDeckSync } from '../hooks/useRevealDeckSync'
 import { slides } from '../lib/presentationData'
 import { updateRevealControls } from '../lib/revealControls'
 import { getRevealLayoutSize, getRevealOptions } from '../lib/revealLayout'
 import { getSlidePanels, type PanelId } from '../lib/slidePanels'
-import { useRevealRouterSync } from '../hooks/useRevealRouterSync'
 import { useSlideRoute } from '../hooks/useSlideRoute'
 import DeckNavigation from './DeckNavigation'
 import SlidePanelContent from './SlidePanelContent'
@@ -53,8 +52,7 @@ export default function Presentation() {
   const [reveal, setReveal] = useState<DeckApi | null>(null)
   const { slideId, panel } = useSlideRoute()
 
-  useRevealRouterSync(reveal)
-  useRevealLayout(reveal)
+  useRevealDeckSync(reveal, slideId, panel)
 
   useEffect(() => {
     if (!deckRef.current) return

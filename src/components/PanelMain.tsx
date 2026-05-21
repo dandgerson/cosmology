@@ -23,6 +23,20 @@ export default function PanelMain({ children }: PanelMainProps) {
     const shell = scrollEl.closest('.slide-shell') as HTMLElement | null
 
     const applyHeight = () => {
+      const isMobile = document.documentElement.dataset.mobileDeck === 'true'
+
+      // Mobile: flex + safe center; clear stale inline caps after rotation.
+      if (isMobile) {
+        if (shell) {
+          shell.style.maxHeight = ''
+          shell.style.overflow = ''
+        }
+        scrollEl.style.height = ''
+        scrollEl.style.maxHeight = ''
+        scrollEl.style.minHeight = ''
+        return
+      }
+
       const shellStyle = shell ? getComputedStyle(shell) : null
       const padBottom = shellStyle ? parseFloat(shellStyle.paddingBottom) : 12
 
@@ -39,6 +53,7 @@ export default function PanelMain({ children }: PanelMainProps) {
 
       scrollEl.style.height = ''
       scrollEl.style.maxHeight = `${maxHeight}px`
+      scrollEl.style.minHeight = ''
       scrollEl.style.overflowY = 'auto'
     }
 
@@ -54,22 +69,30 @@ export default function PanelMain({ children }: PanelMainProps) {
     })
     if (shell) io.observe(shell)
 
-    window.addEventListener('resize', applyHeight)
-    window.visualViewport?.addEventListener('resize', applyHeight)
-    window.visualViewport?.addEventListener('scroll', applyHeight)
+    const scheduleHeight = () => {
+      applyHeight()
+      window.setTimeout(applyHeight, 150)
+      window.setTimeout(applyHeight, 350)
+    }
+
+    window.addEventListener('resize', scheduleHeight)
+    window.addEventListener('orientationchange', scheduleHeight)
+    window.visualViewport?.addEventListener('resize', scheduleHeight)
+    window.visualViewport?.addEventListener('scroll', scheduleHeight)
 
     reveal?.on('slidechanged', applyHeight)
-    reveal?.on('resize', applyHeight)
+    reveal?.on('resize', scheduleHeight)
 
     return () => {
       cancelAnimationFrame(frame)
       ro.disconnect()
       io.disconnect()
-      window.removeEventListener('resize', applyHeight)
-      window.visualViewport?.removeEventListener('resize', applyHeight)
-      window.visualViewport?.removeEventListener('scroll', applyHeight)
+      window.removeEventListener('resize', scheduleHeight)
+      window.removeEventListener('orientationchange', scheduleHeight)
+      window.visualViewport?.removeEventListener('resize', scheduleHeight)
+      window.visualViewport?.removeEventListener('scroll', scheduleHeight)
       reveal?.off('slidechanged', applyHeight)
-      reveal?.off('resize', applyHeight)
+      reveal?.off('resize', scheduleHeight)
     }
   }, [reveal])
 
@@ -92,7 +115,7 @@ export default function PanelMain({ children }: PanelMainProps) {
       onWheel={onWheel}
       data-panel-scroll
     >
-      {children}
+      <div className="slide-scroll-inner">{children}</div>
     </div>
   )
 }

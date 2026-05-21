@@ -150,6 +150,20 @@
     color: var(--r-main-color);
   }
 
+  html[data-mobile-deck='true'] {
+    --deck-bottom-chrome: max(6.5rem, calc(5rem + env(safe-area-inset-bottom)));
+  }
+
+  html[data-mobile-deck='true'] .slide-shell {
+    justify-content: safe center;
+    padding-top: max(0.25rem, env(safe-area-inset-top));
+    padding-bottom: var(--deck-bottom-chrome);
+  }
+
+  .mobile-swipe-hint {
+    bottom: max(4.25rem, calc(2.75rem + env(safe-area-inset-bottom)));
+  }
+
   .slide-center {
     display: flex;
     flex-direction: column;
@@ -160,6 +174,12 @@
     overflow: hidden;
   }
 
+  html[data-mobile-deck='true'] .slide-center {
+    flex: 0 1 auto;
+    max-height: 100%;
+    min-height: 0;
+  }
+
   .slide-scroll {
     display: flex;
     flex-direction: column;
@@ -167,9 +187,6 @@
     min-height: 0;
     flex: 0 1 auto;
     align-self: stretch;
-    justify-content: flex-start;
-    /* fallback until PanelMain measures from viewport */
-    max-height: calc(100dvh - 12rem);
     overflow-x: hidden;
     overflow-y: auto;
     overscroll-behavior: contain;
@@ -178,6 +195,20 @@
     scrollbar-width: thin;
     scrollbar-color: color-mix(in srgb, var(--r-main-color) 35%, transparent)
       transparent;
+    /* fallback until PanelMain measures from viewport (desktop only) */
+    max-height: calc(100dvh - 12rem);
+  }
+
+  html[data-mobile-deck='true'] .slide-scroll {
+    flex: 1 1 auto;
+    max-height: none;
+  }
+
+  .slide-scroll-inner {
+    display: flex;
+    width: 100%;
+    min-height: 100%;
+    flex-direction: column;
   }
 
   .slide-scroll::-webkit-scrollbar {
@@ -198,6 +229,12 @@
     overflow: hidden;
     text-align: left;
     justify-content: flex-start;
+  }
+
+  html[data-mobile-deck='true'] .slide-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    max-height: 100%;
   }
 
   .slide-title,
@@ -271,11 +308,30 @@
 
   .slide-thumbs {
     @apply mt-3 flex flex-wrap justify-center gap-2;
+    touch-action: manipulation;
   }
 
   .slide-thumb {
     @apply h-24 w-32 shrink-0 cursor-zoom-in overflow-hidden rounded border-0 p-0;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
     background: color-mix(in srgb, var(--r-main-color) 12%, transparent);
+  }
+
+  .slide-thumb img {
+    pointer-events: none;
+  }
+
+  .theme-switcher-menu {
+    max-height: min(
+      70dvh,
+      calc(
+        100dvh - 3.5rem - env(safe-area-inset-top) - env(safe-area-inset-bottom)
+      )
+    );
+    padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+    scroll-padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+    -webkit-overflow-scrolling: touch;
   }
 
   .slide-thumbs--single .slide-thumb {

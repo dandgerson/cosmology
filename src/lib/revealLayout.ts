@@ -8,16 +8,28 @@ export type RevealLayoutSize = {
   isMobile: boolean
 }
 
-export function isMobileViewport(width = window.innerWidth): boolean {
-  return width < MOBILE_BREAKPOINT
+export function getViewportSize(): { width: number; height: number } {
+  const vv = window.visualViewport
+  return {
+    width: vv?.width ?? window.innerWidth,
+    height: vv?.height ?? window.innerHeight,
+  }
+}
+
+/** Use the shorter edge so landscape phones stay in mobile layout (width often exceeds 768px). */
+export function isMobileViewport(
+  width = getViewportSize().width,
+  height = getViewportSize().height,
+): boolean {
+  return Math.min(width, height) < MOBILE_BREAKPOINT
 }
 
 /** Slide canvas size — smaller base on phones so Reveal scale stays readable */
 export function getRevealLayoutSize(
-  vw = window.innerWidth,
-  vh = window.innerHeight,
+  vw = getViewportSize().width,
+  vh = getViewportSize().height,
 ): RevealLayoutSize {
-  if (!isMobileViewport(vw)) {
+  if (!isMobileViewport(vw, vh)) {
     return { width: 1920, height: 1080, margin: 0.04, isMobile: false }
   }
 
@@ -48,6 +60,6 @@ export function getRevealOptions(size: RevealLayoutSize = getRevealLayoutSize())
     minScale: 0.2,
     maxScale: 2,
     touch: true,
-    center: true,
+    center: !size.isMobile,
   }
 }

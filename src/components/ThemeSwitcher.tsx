@@ -54,7 +54,7 @@ export default function ThemeSwitcher() {
             onClick={() => setOpen(false)}
           />
           <ul
-            className="absolute top-full right-0 z-[51] mt-2 max-h-[70vh] min-w-44 list-none overflow-y-auto rounded-lg border border-switcher-border bg-switcher-menu p-1.5 shadow-xl"
+            className="theme-switcher-menu absolute top-full right-0 z-[51] mt-2 min-w-44 list-none overflow-y-auto overscroll-contain rounded-lg border border-switcher-border bg-switcher-menu p-1.5 shadow-xl"
             role="listbox"
             aria-label="Темы"
           >

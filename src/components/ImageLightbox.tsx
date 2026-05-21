@@ -125,7 +125,9 @@ export default function ImageLightbox({
                   {index + 1} / {images.length}
                 </span>
               )}
-              {current.description && <p className="mt-1">{current.description}</p>}
+              {current.description && (
+                <p className="image-lightbox__caption-text mt-1">{current.description}</p>
+              )}
             </figcaption>
           )}
         </figure>
